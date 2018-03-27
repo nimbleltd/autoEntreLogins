@@ -16,9 +16,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from random import *
 
-# browser = webdriver.Chrome()
+browser = webdriver.Chrome()
 # browser = webdriver.Firefox()
-browser = webdriver.Safari()
+# browser = webdriver.Safari()
 
 # Args
 parser = argparse.ArgumentParser()
@@ -104,9 +104,17 @@ def createNewUserQA(url):
 	print(randUser)
 	randEmail = "%s@mailinator.com" % randUser
 	print(randEmail)
+
+	# root of domain
 	browser.get (url)
+	
+	# go to allaccess
 	browser.find_element_by_partial_link_text("Become").click()
+	
+	# go to sign up page for allaccess
 	browser.find_element_by_partial_link_text("Become").click()
+
+	# fill out new All Access member form
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
 	browser.find_element_by_id("user_last_name").send_keys("testLastName")
 	browser.find_element_by_id("user_email").send_keys(randEmail)
@@ -114,9 +122,11 @@ def createNewUserQA(url):
 	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
-	browser.find_element_by_name("commit").click() # create new user
+	browser.find_element_by_name("commit").click() # submit create new user
+
+	# apply discount code before entering payment
 	browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
-	browser.find_element_by_id("coupon_submit").click() # submit discount code
+	browser.find_element_by_id("coupon_submit").click() # apply discount code
 	# browser.implicitly_wait(5)
 	# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
 	browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
@@ -142,7 +152,7 @@ def createNewUserQA(url):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-# createNewUserQA("https://www.qa.entreleadership.com")
+createNewUserQA("https://www.test.entreleadership.com")
 
 # loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
