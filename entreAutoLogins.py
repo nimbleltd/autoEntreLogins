@@ -3,6 +3,8 @@
 # waiting for login
 # https://irwinkwan.com/2013/04/05/automating-the-web-with-selenium-complete-tasks-automatically-and-write-test-cases/
 import os
+import time
+
 #Argparse
 import argparse
 
@@ -14,7 +16,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from random import *
 
-browser = webdriver.Chrome()
+# browser = webdriver.Chrome()
+# browser = webdriver.Firefox()
+browser = webdriver.Safari()
 
 # Args
 parser = argparse.ArgumentParser()
@@ -94,15 +98,53 @@ def getPwd(credFile):
 	# One Liner
 	# for i in open(credFile,'r').readlines():
 	# 	print(i)
-		
+
+def createNewUserQA(url):
+	randUser = "testUser%s" % randint(1, 10000)
+	print(randUser)
+	randEmail = "%s@mailinator.com" % randUser
+	print(randEmail)
+	browser.get (url)
+	browser.find_element_by_partial_link_text("Become").click()
+	browser.find_element_by_partial_link_text("Become").click()
+	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
+	browser.find_element_by_id("user_last_name").send_keys("testLastName")
+	browser.find_element_by_id("user_email").send_keys(randEmail)
+	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
+	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
+	browser.find_element_by_name("password").send_keys("password")
+	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
+	browser.find_element_by_name("commit").click() # create new user
+	browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+	browser.find_element_by_id("coupon_submit").click() # submit discount code
+	# browser.implicitly_wait(5)
+	# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+	browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	
+	# payment page
+	# browser.find_element_by_name("field_creditCardNumber").send_keys("5454 5454 5454 5454")
+	browser.find_element_by_xpath("//div[@id='form-element-creditCardNumber']//type[@id='input-creditCardNumber']").send_keys("5454 5454 5454 5454")
+	browser.find_element_by_xpath("//select[@name='field_creditCardExpirationMonth']/option[text()='01']").click() # chose dropdown select
+
+
+	# open new tab in Mailinator to watch emails
+	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
+	# browser.switch_to.window(browser.window_handles[0]) #<- switch tabs
+
+
+
 
 #========================================== main =================================
 
 # loginWeeklyReport("https://weeklyreport.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
-loginEntre("https://www.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
+# loginEntre("https://www.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
 # becomeEntreMember("https://www.entreleadership.com")
+
+# createNewUserQA("https://www.qa.entreleadership.com")
+
+# loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
 
 
