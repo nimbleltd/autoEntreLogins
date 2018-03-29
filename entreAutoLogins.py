@@ -14,6 +14,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+
+# Standard Libs
 from random import *
 
 browser = webdriver.Chrome()
@@ -109,6 +112,8 @@ def createNewUserQA(url):
 	browser.get (url)
 	
 	# go to allaccess
+	browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+
 	browser.find_element_by_partial_link_text("Become").click()
 	
 	# go to sign up page for allaccess
@@ -132,16 +137,42 @@ def createNewUserQA(url):
 	browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	
 	# payment page
-	# browser.find_element_by_name("field_creditCardNumber").send_keys("5454 5454 5454 5454")
-	browser.find_element_by_xpath("//div[@id='form-element-creditCardNumber']//type[@id='input-creditCardNumber']").send_keys("5454 5454 5454 5454")
-	browser.find_element_by_xpath("//select[@name='field_creditCardExpirationMonth']/option[text()='01']").click() # chose dropdown select
+	iframe = browser.find_element_by_id("z_hppm_iframe")
+	browser.switch_to.frame(iframe)
+	print(browser.find_element_by_id("input-creditCardNumber").get_attribute("class"))
+	browser.find_element_by_id("input-creditCardNumber").send_keys("5454545454545454")
+	select_dropdown_value('input-creditCardExpirationMonth', '03')
+	select_dropdown_value('input-creditCardExpirationYear', '2037')
+	browser.find_element_by_id("input-cardSecurityCode").send_keys("989")
+	select_dropdown_value('input-creditCardState', 'Tennessee')
+	browser.find_element_by_id("input-creditCardAddress1").send_keys("123 Test Dr")
+	browser.find_element_by_id("input-creditCardCity").send_keys("Nashville")
+	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
+	browser.find_element_by_id("submitButton").click()
+
+	# initial login
+	browser.implicitly_wait(40)
+	browser.find_element_by_name("email").send_keys(randEmail)
+	browser.find_element_by_name("password").send_keys("password")
+	browser.find_element_by_name("commit").click()
 
 
-	# open new tab in Mailinator to watch emails
-	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
-	# browser.switch_to.window(browser.window_handles[0]) #<- switch tabs
+def select_dropdown_value(id, value):
 
+	selectOption = Select(browser.find_element_by_id(id))
+	print("selectOption = %s" % selectOption)
+	option_selected = selectOption.select_by_value(value)
 
+def elementExists(url, locator_attr, locator_text):
+	# Description: return true if element exists
+	browser.get (url)
+	try:
+		browser.find_element(locator_attr, locator_text)
+		print("true")
+		return True
+	except:
+		print("false")
+		return False
 
 
 #========================================== main =================================
@@ -152,11 +183,15 @@ def createNewUserQA(url):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-createNewUserQA("https://www.test.entreleadership.com")
-
-# loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
 
+createNewUserQA("https://www.qa.entreleadership.com")
+
+
+
+# loginEntre("https://www.test.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
+
+# elementExists("https://www.test.entreleadership.com", "by_css_selector", "HeroButter-heading")
 
 # # Notes on tabs
 # driver = webdriver.Chrome()

@@ -8,6 +8,7 @@ __pycache__/
 
 # Creds Required by autoEntreLogin but must stay out of repo
 creds.py
+auth0_creds.py
 
 # Distribution / packaging
 .Python
