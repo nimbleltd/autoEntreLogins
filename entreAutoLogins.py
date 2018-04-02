@@ -121,7 +121,7 @@ def createNewUserQA(url):
 
 	# fill out new All Access member form
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
-	browser.find_element_by_id("user_last_name").send_keys("testLastName")
+	browser.find_element_by_id("user_last_name").send_keys("testLastName%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
 	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
@@ -139,7 +139,7 @@ def createNewUserQA(url):
 	# payment page
 	iframe = browser.find_element_by_id("z_hppm_iframe")
 	browser.switch_to.frame(iframe)
-	print(browser.find_element_by_id("input-creditCardNumber").get_attribute("class"))
+	# print(browser.find_element_by_id("input-creditCardNumber").get_attribute("class"))
 	browser.find_element_by_id("input-creditCardNumber").send_keys("5454545454545454")
 	select_dropdown_value('input-creditCardExpirationMonth', '03')
 	select_dropdown_value('input-creditCardExpirationYear', '2037')
@@ -150,17 +150,83 @@ def createNewUserQA(url):
 	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
 	browser.find_element_by_id("submitButton").click()
 
-	# initial login
-	browser.implicitly_wait(40)
+	# initial user login
+	browser.implicitly_wait(30)
 	browser.find_element_by_name("email").send_keys(randEmail)
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_name("commit").click()
 
+	# all acces on boarding, watch intro video
+	try:
+		browser.implicitly_wait(30)
+		time.sleep(5)
+		browser.find_element_by_xpath("//button[contains(text(), 'Next Step')]").click()
+	except:
+		print("failed to click next")
+	# Completed your profile
+	#Industry
+	browser.implicitly_wait(30)
+	wait = WebDriverWait(browser, 10)
+	element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
+	# select industry info
+
+	browser.find_element_by_xpath("//div[@id='profile-card-field-industry']//i[@class='fa fa-plus profile-card-field-icon plus']").click()
+	select_dropdown_value('user_industry', 'Financial Services')
+	
+	# save Industry changes
+	wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-form-industry')))
+	time.sleep(5)
+	# browser.implicitly_wait(30)
+	timeout = 5
+	try:
+		element_present = EC.presence_of_element_located((By.ID, 'profile-card-field-form-industry'))
+		WebDriverWait(browser, timeout).until(element_present)
+		browser.implicitly_wait(5)
+		time.sleep(5)
+		browser.find_element_by_xpath("//div[@id='profile-card-field-form-industry']//button[@type='submit']").click()
+	except:
+		print("busted")
+
+	# Team Size 
+	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	select_dropdown_value('user_num_of_employees', '2-10')
+	browser.implicitly_wait(5)
+	time.sleep(5)
+	browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
+
+	# Gross Revenue 
+	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
+	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
+
+	# Go to the Next Page
+	time.sleep(5)
+	print("next after edit of profile")
+	browser.find_element_by_xpath("//button[@data-event='completed_profile_setup']").click()
+	print("after clicking next")
+
+	# Skip chosing day for MasterMind
+	browser.implicitly_wait(5)
+	time.sleep(5)
+	browser.find_element_by_xpath("//button[@data-target='3' and contains(text(), 'Skip for now')]").click()
+
+	# Get Started
+	browser.implicitly_wait(5)
+	time.sleep(5)
+	browser.find_element_by_link_text("Get Started!").click()
+	
+	# name("commit").click()
+
+	# Open Mailinator to see
+	# browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
+
+
+	# close driver
+	# browser.close()
+
 
 def select_dropdown_value(id, value):
-
 	selectOption = Select(browser.find_element_by_id(id))
-	print("selectOption = %s" % selectOption)
 	option_selected = selectOption.select_by_value(value)
 
 def elementExists(url, locator_attr, locator_text):
@@ -183,13 +249,11 @@ def elementExists(url, locator_attr, locator_text):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-
-
 createNewUserQA("https://www.qa.entreleadership.com")
 
 
 
-# loginEntre("https://www.test.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
+# loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
 # elementExists("https://www.test.entreleadership.com", "by_css_selector", "HeroButter-heading")
 
