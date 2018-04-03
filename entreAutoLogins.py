@@ -102,7 +102,7 @@ def getPwd(credFile):
 	# for i in open(credFile,'r').readlines():
 	# 	print(i)
 
-def createNewUserQA(url):
+def createNewUserAA(url):
 	randUser = "testUser%s" % randint(1, 10000)
 	print(randUser)
 	randEmail = "%s@mailinator.com" % randUser
@@ -121,12 +121,14 @@ def createNewUserQA(url):
 
 	# fill out new All Access member form
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
-	browser.find_element_by_id("user_last_name").send_keys("testLastName%s" % randUser)
+	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
 	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
+	# browser.implicitly_wait(30)
+	# time.sleep(3)
 	browser.find_element_by_name("commit").click() # submit create new user
 
 	# apply discount code before entering payment
@@ -185,7 +187,7 @@ def createNewUserQA(url):
 		time.sleep(5)
 		browser.find_element_by_xpath("//div[@id='profile-card-field-form-industry']//button[@type='submit']").click()
 	except:
-		print("busted")
+		print("busted, didn't find %s" % element_present)
 
 	# Team Size 
 	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
@@ -249,7 +251,7 @@ def elementExists(url, locator_attr, locator_text):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-createNewUserQA("https://www.qa.entreleadership.com")
+createNewUserAA("https://www.qa.entreleadership.com")
 
 
 
