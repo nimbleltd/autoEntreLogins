@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# waiting for login
-# https://irwinkwan.com/2013/04/05/automating-the-web-with-selenium-complete-tasks-automatically-and-write-test-cases/
 import os
 import time
 
@@ -18,6 +16,7 @@ from selenium.webdriver.support.ui import Select
 
 # Standard Libs
 from random import *
+import subprocess # <-- to get clipboarData
 
 browser = webdriver.Chrome()
 # browser = webdriver.Firefox()
@@ -43,22 +42,11 @@ def loginWeeklyReport(url, email, pwd):
 	browser.find_element_by_name("high").send_keys("blah blah blah blah")
 
 def loginEntre(url, email, pwd):
-	# browser.implicitly_wait(30) # <- try for 30sec to do action 
 	browser.get (url)
-	# browser.find_element_by_id("chicago-button-no").click()
 	browser.find_element_by_link_text("Log In").click()
 	browser.find_element_by_name("email").send_keys(email)
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_name("commit").click()
-	# browser.implicitly_wait(30)
-	# browser.find_element_by_name("high").send_keys("blah blah blah blah")
-
-# def randMailinatorAddress():
-# 	randNum = randint(1, 10000)    # Pick a random number between 1 and 100.
-# 	print(randNum)
-# 	randEmail = "testUser ".replace(' ', str(randNum))
-# 	print(randEmail)
-# 	return randEmail
 
 def becomeEntreMember(url):
 	randUser = "testUser%s" % randint(1, 10000)
@@ -82,21 +70,6 @@ def becomeEntreMember(url):
 	# browser.switch_to.window(browser.window_handles[1])
 	# browser.switch_to.window(browser.window_handles[-1])
 
-def getUsername(credFile):
-	file = open(credFile,'r')#.readlines()
-	for x, line in enumerate(file):
-		if x == 0:
-			username = line
-	file.close()
-	return(username)
-
-def getPwd(credFile):
-	file = open(credFile,'r')#.readlines()
-	for x, line in enumerate(file):
-		if x == 1:
-			pwd = line
-	file.close()
-	return(pwd)
 
 	# One Liner
 	# for i in open(credFile,'r').readlines():
@@ -217,15 +190,12 @@ def createNewUserAA(url):
 	time.sleep(5)
 	browser.find_element_by_link_text("Get Started!").click()
 	
-	# name("commit").click()
-
 	# Open Mailinator to see
-	# browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
+	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
 
 
 	# close driver
 	# browser.close()
-
 
 def select_dropdown_value(id, value):
 	selectOption = Select(browser.find_element_by_id(id))
@@ -243,6 +213,67 @@ def elementExists(url, locator_attr, locator_text):
 		return False
 
 
+def getClipboardData():
+ p = subprocess.Popen(['pbpaste'], stdout=subprocess.PIPE)
+ retcode = p.wait()
+ data = p.stdout.read()
+ return data
+
+def setClipboardData(data):
+ p = subprocess.Popen(['pbcopy'], stdin=subprocess.PIPE)
+ p.stdin.write(data)
+ p.stdin.close()
+ retcode = p.wait()
+
+
+
+def signUpAAuserForWRT(url, email, password):
+	browser.get (url)
+
+	# WRT Sign In
+	browser.find_element_by_name("email").send_keys(email)
+	browser.find_element_by_name("password").send_keys(password)
+	browser.find_element_by_class_name("Button").click()
+
+	# # Get started
+	# browser.implicitly_wait(10)
+	# browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
+
+	# # Continue Sign-up
+	# browser.find_element_by_name("title").send_keys("Nerf Herder")
+	# browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+
+	# Invite Team
+	# copy link
+	browser.implicitly_wait(10)
+	browser.find_element_by_xpath("//button[contains(text(), 'Copy Link')]").click()
+	aggies = str(getClipboardData())
+	# drop un-needed chars on clipboard content
+	aggies = aggies[2:-1]
+	browser.execute_script("window.open('%s', 'new_window')" % aggies)
+	browser.switch_to.window(browser.window_handles[0])
+
+	# Go to "Edit Team" page
+	browser.find_element_by_xpath("//a[contains(text(), 'Edit Team')]").click()
+	# CRUD members of team
+	browser.find_element_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']").click()
+	browser.find_element_by_xpath("//button[contains(text(), 'Edit')]").click()
+
+	# edit team member
+	browser.find_element_by_name("firstName").click()
+	time.sleep(1)
+	browser.find_element_by_name("firstName").clear()
+	browser.find_element_by_name("firstName").send_keys("firstNameChange")
+
+	browser.find_element_by_class_name("Button").click()
+
+
+
+
+	
+
+
+
 #========================================== main =================================
 
 # loginWeeklyReport("https://weeklyreport.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
@@ -251,31 +282,14 @@ def elementExists(url, locator_attr, locator_text):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-createNewUserAA("https://www.qa.entreleadership.com")
+# createNewUserAA("https://www.qa.entreleadership.com")
 
+
+signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
 
 
 # loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
 # elementExists("https://www.test.entreleadership.com", "by_css_selector", "HeroButter-heading")
 
-# # Notes on tabs
-# driver = webdriver.Chrome()
-
-# # Open a new window
-# # This does not change focus to the new window for the driver.
-# driver.execute_script("window.open('');")
-
-# # Switch to the new window
-# driver.switch_to.window(driver.window_handles[1])
-# driver.get("http://stackoverflow.com")
-
-# # close the active tab
-# driver.close()
-
-# # Switch back to the first tab
-# driver.switch_to.window(driver.window_handles[0])
-# driver.get("http://google.se")
-
-# # Close the only tab, will also close the browser.
-# driver.close()
+# print(getClipboardData())
