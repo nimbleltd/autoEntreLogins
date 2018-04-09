@@ -104,17 +104,16 @@ def createNewUserAA(url):
 	# time.sleep(3)
 	browser.find_element_by_name("commit").click() # submit create new user
 
-	# apply discount code before entering payment
+	# apply discount code before entering payment https://www.qa.entreleadership.com/pay
 	browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 	browser.find_element_by_id("coupon_submit").click() # apply discount code
-	# browser.implicitly_wait(5)
-	# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+	browser.implicitly_wait(5)
+	time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
 	browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	
 	# payment page
 	iframe = browser.find_element_by_id("z_hppm_iframe")
 	browser.switch_to.frame(iframe)
-	# print(browser.find_element_by_id("input-creditCardNumber").get_attribute("class"))
 	browser.find_element_by_id("input-creditCardNumber").send_keys("5454545454545454")
 	select_dropdown_value('input-creditCardExpirationMonth', '03')
 	select_dropdown_value('input-creditCardExpirationYear', '2037')
@@ -141,7 +140,7 @@ def createNewUserAA(url):
 	# Completed your profile
 	#Industry
 	browser.implicitly_wait(30)
-	wait = WebDriverWait(browser, 10)
+	wait = WebDriverWait(browser, 5)
 	element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
 	# select industry info
 
@@ -168,27 +167,32 @@ def createNewUserAA(url):
 	browser.implicitly_wait(5)
 	time.sleep(5)
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
-
 	# Gross Revenue 
 	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
 	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
-
 	# Go to the Next Page
+	browser.implicitly_wait(10)
 	time.sleep(5)
-	print("next after edit of profile")
 	browser.find_element_by_xpath("//button[@data-event='completed_profile_setup']").click()
-	print("after clicking next")
 
 	# Skip chosing day for MasterMind
-	browser.implicitly_wait(5)
-	time.sleep(5)
-	browser.find_element_by_xpath("//button[@data-target='3' and contains(text(), 'Skip for now')]").click()
+	# browser.implicitly_wait(5)
+	# time.sleep(5)
+	# browser.find_element_by_xpath("//button[@data-target='3' and contains(text(), 'Skip for now')]").click()
 
-	# Get Started
+	# Choose Friday 10am MM Group
 	browser.implicitly_wait(5)
 	time.sleep(5)
-	browser.find_element_by_link_text("Get Started!").click()
+	browser.find_element_by_id("mastermind-group-92").click()
+	browser.find_element_by_xpath("//button[@data-target='3']").click()
+
+	# Get Started: https://www.qa.entreleadership.com/get-started?step=validate_sync_ecoaching
+	browser.implicitly_wait(5)
+	time.sleep(5)
+	# browser.find_element_by_link_text("Get Started").click()
+	browser.find_element_by_xpath("//a[@data-event='completed_ecoaching_sync']").click()
+
 	
 	# Open Mailinator to see
 	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
@@ -282,10 +286,10 @@ def signUpAAuserForWRT(url, email, password):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-# createNewUserAA("https://www.qa.entreleadership.com")
+createNewUserAA("https://www.qa.entreleadership.com")
 
 
-signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
+# signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
 
 
 # loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
