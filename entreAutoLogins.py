@@ -2,6 +2,7 @@
 
 import os
 import time
+import datetime
 
 #Argparse
 import argparse
@@ -75,11 +76,14 @@ def becomeEntreMember(url):
 	# for i in open(credFile,'r').readlines():
 	# 	print(i)
 
-def createNewUserAA(url):
-	randUser = "testUser%s" % randint(1, 10000)
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
+def createNewUserAA(url, randUser, randEmail):
+	# randUser = "testUser%s" % randint(1, 10000)
+	# print(randUser)
+	# randEmail = "%s@mailinator.com" % randUser
+	# print(randEmail)
+
+	whichEnv = url.split('.')[1]
+
 
 	# root of domain
 	browser.get (url)
@@ -97,19 +101,26 @@ def createNewUserAA(url):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
+	browser.find_element_by_id("user_company_name").send_keys("Hairy Pop-ins")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# browser.implicitly_wait(30)
 	# time.sleep(3)
 	browser.find_element_by_name("commit").click() # submit create new user
 
-	# apply discount code before entering payment https://www.qa.entreleadership.com/pay
-	browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
-	browser.find_element_by_id("coupon_submit").click() # apply discount code
-	browser.implicitly_wait(5)
-	time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
-	browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	if whichEnv == 'qa':
+		print("TestEnv = %s" % whichEnv)
+		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
+		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+		browser.find_element_by_id("coupon_submit").click() # apply discount code
+		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	else:
+		print("TestEnv = %s \nskipping discount code test" % whichEnv)
+		browser.implicitly_wait(5)
+		time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	
+
 	
 	# payment page
 	iframe = browser.find_element_by_id("z_hppm_iframe")
@@ -130,13 +141,14 @@ def createNewUserAA(url):
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_name("commit").click()
 
-	# all acces on boarding, watch intro video
-	try:
-		browser.implicitly_wait(30)
-		time.sleep(5)
-		browser.find_element_by_xpath("//button[contains(text(), 'Next Step')]").click()
-	except:
-		print("failed to click next")
+	# all acces on boarding, watch intro video, click next
+	print("before waiting")
+	browser.implicitly_wait(30)
+	time.sleep(8)
+	browser.find_element_by_xpath("//button[@name='button']").click()
+	print("should have clicked Next now...")
+
+
 	# Completed your profile
 	#Industry
 	browser.implicitly_wait(30)
@@ -171,25 +183,24 @@ def createNewUserAA(url):
 	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
 	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
+	
 	# Go to the Next Page
-	browser.implicitly_wait(10)
-	time.sleep(5)
+	browser.implicitly_wait(5)
+	time.sleep(9)
 	browser.find_element_by_xpath("//button[@data-event='completed_profile_setup']").click()
-
-	# Skip chosing day for MasterMind
-	# browser.implicitly_wait(5)
-	# time.sleep(5)
-	# browser.find_element_by_xpath("//button[@data-target='3' and contains(text(), 'Skip for now')]").click()
 
 	# Choose Friday 10am MM Group
 	browser.implicitly_wait(5)
 	time.sleep(5)
-	browser.find_element_by_id("mastermind-group-92").click()
+	if whichEnv == "qa":
+		browser.find_element_by_id("mastermind-group-92").click() # qa
+	else:
+		browser.find_element_by_id("mastermind-group-133").click() # test
 	browser.find_element_by_xpath("//button[@data-target='3']").click()
 
 	# Get Started: https://www.qa.entreleadership.com/get-started?step=validate_sync_ecoaching
 	browser.implicitly_wait(5)
-	time.sleep(5)
+	time.sleep(8)
 	# browser.find_element_by_link_text("Get Started").click()
 	browser.find_element_by_xpath("//a[@data-event='completed_ecoaching_sync']").click()
 
@@ -231,31 +242,61 @@ def setClipboardData(data):
 
 
 
-def signUpAAuserForWRT(url, email, password):
+def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_users_to_create):
 	browser.get (url)
 
-	# WRT Sign In
-	browser.find_element_by_name("email").send_keys(email)
-	browser.find_element_by_name("password").send_keys(password)
-	browser.find_element_by_class_name("Button").click()
+	if am_i_signed_in == True:
+		pass
+	else:
+		# WRT Sign In
+		browser.find_element_by_name("email").send_keys(email)
+		browser.find_element_by_name("password").send_keys(password)
+		browser.find_element_by_class_name("Button").click()
 
 	# # Get started
-	# browser.implicitly_wait(10)
-	# browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
+	if firstLogin == True:
+		try:
+			browser.implicitly_wait(10)
+			browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
 
-	# # Continue Sign-up
-	# browser.find_element_by_name("title").send_keys("Nerf Herder")
-	# browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+			# Continue Sign-up
+			browser.find_element_by_name("title").send_keys("Nerf Herder")
+			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+		except Exception:
+			pass
 
 	# Invite Team
 	# copy link
 	browser.implicitly_wait(10)
+	time.sleep(5)
 	browser.find_element_by_xpath("//button[contains(text(), 'Copy Link')]").click()
-	aggies = str(getClipboardData())
+	comapnyLink = str(getClipboardData())
 	# drop un-needed chars on clipboard content
-	aggies = aggies[2:-1]
-	browser.execute_script("window.open('%s', 'new_window')" % aggies)
+	comapnyLink = comapnyLink[2:-1]
+	randUser = email.split('@')[0]
+	# Add n number users to the Company WRT
+	for n in range(0, num_users_to_create):
+		print("n = %s" % n)
+		time.sleep(1)
+		# browser.switch_to.window(browser.window_handles[(n-1)])
+		browser.execute_script("window.open('%s', 'tab%s')" % (comapnyLink, (n)))
+		browser.switch_to.window('tab%s' % (n))
+		browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+		browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
+		browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
+		browser.find_element_by_xpath("//input[@name='lastName']").send_keys("lName")
+		browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
+		browser.find_element_by_xpath("//input[@name='password']").send_keys("password")
+		browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+		browser.implicitly_wait(20)
+		time.sleep(10)
+		browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+		browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+		# browser.switch_to.window('tab%s' % (n))
 	browser.switch_to.window(browser.window_handles[0])
+
+	# browser.execute_script("window.open('%s', 'new_window')" % comapnyLink)
+	# browser.switch_to.window(browser.window_handles[0])
 
 	# Go to "Edit Team" page
 	browser.find_element_by_xpath("//a[contains(text(), 'Edit Team')]").click()
@@ -267,7 +308,8 @@ def signUpAAuserForWRT(url, email, password):
 	browser.find_element_by_name("firstName").click()
 	time.sleep(1)
 	browser.find_element_by_name("firstName").clear()
-	browser.find_element_by_name("firstName").send_keys("firstNameChange")
+	timestamp = datetime.datetime.now().strftime('%b-%d_%I:%M:%S')
+	browser.find_element_by_name("firstName").send_keys("botWroteThis-%s" % timestamp)
 
 	browser.find_element_by_class_name("Button").click()
 
@@ -286,10 +328,15 @@ def signUpAAuserForWRT(url, email, password):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-createNewUserAA("https://www.qa.entreleadership.com")
+# createNewUserAA("https://www.qa.entreleadership.com")
 
 
 # signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
+
+# signUpAAuserForWRT("https://weeklyreport.test.entreleadership.com/get-started", "testUser4365@mailinator.com", "password" , False)
+
+# signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4067@mailinator.com", "password", False) # testUser8890@mailinator.com
+
 
 
 # loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
@@ -297,3 +344,20 @@ createNewUserAA("https://www.qa.entreleadership.com")
 # elementExists("https://www.test.entreleadership.com", "by_css_selector", "HeroButter-heading")
 
 # print(getClipboardData())
+
+# Challenge Create new AA user and add 7 team members to his WRT Company
+def createNewAAandWRTuser():
+	env = "test"
+	randUser = "testUser%s" % randint(1, 10000)
+	print(randUser)
+	randEmail = "%s@mailinator.com" % randUser
+	print(randEmail)
+
+	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
+	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 3)
+
+
+
+createNewAAandWRTuser()
+
+# signUpAAuserForWRT("https://weeklyreport.test.entreleadership.com/get-started", "testUser2689@mailinator.com", "password" , False, False, 7)
