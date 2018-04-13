@@ -101,7 +101,7 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("Hairy Pop-ins")
+	browser.find_element_by_id("user_company_name").send_keys("Florist Gumpys")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# browser.implicitly_wait(30)
@@ -144,7 +144,7 @@ def createNewUserAA(url, randUser, randEmail):
 	# all acces on boarding, watch intro video, click next
 	print("before waiting")
 	browser.implicitly_wait(30)
-	time.sleep(8)
+	time.sleep(15)
 	browser.find_element_by_xpath("//button[@name='button']").click()
 	print("should have clicked Next now...")
 
@@ -268,7 +268,7 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	# Invite Team
 	# copy link
 	browser.implicitly_wait(10)
-	time.sleep(5)
+	time.sleep(10)
 	browser.find_element_by_xpath("//button[contains(text(), 'Copy Link')]").click()
 	comapnyLink = str(getClipboardData())
 	# drop un-needed chars on clipboard content
@@ -281,6 +281,7 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 		# browser.switch_to.window(browser.window_handles[(n-1)])
 		browser.execute_script("window.open('%s', 'tab%s')" % (comapnyLink, (n)))
 		browser.switch_to.window('tab%s' % (n))
+		time.sleep(2)
 		browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
 		browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
 		browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
@@ -292,13 +293,12 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 		time.sleep(10)
 		browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
 		browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
-		# browser.switch_to.window('tab%s' % (n))
 	browser.switch_to.window(browser.window_handles[0])
 
-	# browser.execute_script("window.open('%s', 'new_window')" % comapnyLink)
-	# browser.switch_to.window(browser.window_handles[0])
-
 	# Go to "Edit Team" page
+	time.sleep(1)
+	browser.find_element_by_xpath("//a[contains(text(), 'Weekly Report Tool')]").click()
+	time.sleep(1)
 	browser.find_element_by_xpath("//a[contains(text(), 'Edit Team')]").click()
 	# CRUD members of team
 	browser.find_element_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']").click()
@@ -347,14 +347,14 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 
 # Challenge Create new AA user and add 7 team members to his WRT Company
 def createNewAAandWRTuser():
-	env = "test"
-	randUser = "testUser%s" % randint(1, 10000)
+	env = "qa"
+	randUser = "genUser%s" % randint(1, 10000)
 	print(randUser)
 	randEmail = "%s@mailinator.com" % randUser
 	print(randEmail)
 
 	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 3)
+	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 5)
 
 
 
