@@ -1,0 +1,25 @@
+// List of Users and Properties/States
+// State  Username
+[
+	{
+		aaOnly:genUser6347@mailinator.com
+	},
+	{
+		aaAndWrt:genUser1173@mailinator.com
+    },
+    {
+        manyWRTusers:genUser7148@mailinator.com
+    }
+]
+
+[
+	{
+		prodOwner:testelco@mailinator.com
+	},
+	{
+		prodReporter:testelco-0@mailinator.com
+    },
+    {
+        manyWRTusers:genUser7148@mailinator.com
+    }
+]

@@ -39,8 +39,8 @@ def loginWeeklyReport(url, email, pwd):
 	browser.find_element_by_name("email").send_keys(email)
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_class_name("Button").click()
-	browser.implicitly_wait(30)
-	browser.find_element_by_name("high").send_keys("blah blah blah blah")
+	# browser.implicitly_wait(30)
+	# browser.find_element_by_name("high").send_keys("blah blah blah blah")
 
 def loginEntre(url, email, pwd):
 	browser.get (url)
@@ -101,7 +101,7 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("Florist Gumpys")
+	browser.find_element_by_id("user_company_name").send_keys("Centerville Pediatric Dentistry")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# browser.implicitly_wait(30)
@@ -261,6 +261,8 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 
 			# Continue Sign-up
 			browser.find_element_by_name("title").send_keys("Nerf Herder")
+			browser.implicitly_wait(10)
+			time.sleep(5)
 			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 		except Exception:
 			pass
@@ -282,17 +284,20 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 		browser.execute_script("window.open('%s', 'tab%s')" % (comapnyLink, (n)))
 		browser.switch_to.window('tab%s' % (n))
 		time.sleep(2)
-		browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
-		browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
-		browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
-		browser.find_element_by_xpath("//input[@name='lastName']").send_keys("lName")
-		browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
-		browser.find_element_by_xpath("//input[@name='password']").send_keys("password")
-		browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
-		browser.implicitly_wait(20)
-		time.sleep(10)
-		browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
-		browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+		try:
+			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+			browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
+			browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
+			browser.find_element_by_xpath("//input[@name='lastName']").send_keys("%s-%s" % (randUser, n))
+			browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
+			browser.find_element_by_xpath("//input[@name='password']").send_keys("password")
+			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+			browser.implicitly_wait(20)
+			time.sleep(10)
+			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+		except:
+			pass
 	browser.switch_to.window(browser.window_handles[0])
 
 	# Go to "Edit Team" page
@@ -303,21 +308,88 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	# CRUD members of team
 	browser.find_element_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']").click()
 	browser.find_element_by_xpath("//button[contains(text(), 'Edit')]").click()
-
-	# edit team member
+	# edit team member first name
 	browser.find_element_by_name("firstName").click()
 	time.sleep(1)
 	browser.find_element_by_name("firstName").clear()
 	timestamp = datetime.datetime.now().strftime('%b-%d_%I:%M:%S')
 	browser.find_element_by_name("firstName").send_keys("botWroteThis-%s" % timestamp)
-
+	# same user new name
 	browser.find_element_by_class_name("Button").click()
 
-
-
+	# delete team member from team
+	findTeamMemeber = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']")
+	print("findTeamMemeber = %s" % len(findTeamMemeber))
+	findTeamMemeber[2].click()
+	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
 
 	
 
+
+def createNewAAandWRTuser():
+	env = "qa"
+	# randUser = "genUser%s" % randint(1, 10000)
+	randUser = "kylecentervillepediatricdentistry"
+	print(randUser)
+	randEmail = "%s@mailinator.com" % randUser
+	print(randEmail)
+
+	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
+	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 3)
+
+def loginWRT(user, pwd, env):
+	browser.get ("https://weeklyreport.%s.entreleadership.com/get-started" % (env))
+	browser.implicitly_wait(30)
+	time.sleep(5)
+	browser.find_element_by_name("email").send_keys(email)
+	browser.find_element_by_name("password").send_keys(password)
+	browser.find_element_by_class_name("Button").click()
+
+# workflows
+# =====================================================================
+
+# ===================================================
+# Create many team members using company sign up link
+# ===================================================
+def createUserByCompanyLink(companyURL, num_users_to_create):
+	comapnyLink = companyURL
+	email = "makeManyUsers9998@mailinator.com"
+	randUser = email.split('@')[0]
+	# Add n number users to the Company WRT
+	for n in range(0, num_users_to_create):
+		print("n = %s" % n)
+		time.sleep(1)
+		# browser.switch_to.window(browser.window_handles[(n-1)])
+		browser.execute_script("window.open('%s', 'tab%s')" % (comapnyLink, (n)))
+		browser.switch_to.window('tab%s' % (n))
+		time.sleep(2)
+		try:
+			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+			browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
+			browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
+			browser.find_element_by_xpath("//input[@name='lastName']").send_keys(randUser)
+			browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
+			browser.find_element_by_xpath("//input[@name='password']").send_keys("password")
+			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+			browser.implicitly_wait(20)
+			time.sleep(10)
+			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+		except:
+			pass
+	browser.switch_to.window(browser.window_handles[0])
+
+# ===================================================
+
+# =================
+#  Forgot Password
+# =================
+# loginWRT("genUser2317@mailinator.com", "password", "qa")
+
+
+
+# =====================================================================
 
 
 #========================================== main =================================
@@ -337,8 +409,6 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 
 # signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4067@mailinator.com", "password", False) # testUser8890@mailinator.com
 
-
-
 # loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
 
 # elementExists("https://www.test.entreleadership.com", "by_css_selector", "HeroButter-heading")
@@ -346,18 +416,38 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 # print(getClipboardData())
 
 # Challenge Create new AA user and add 7 team members to his WRT Company
-def createNewAAandWRTuser():
-	env = "qa"
-	randUser = "genUser%s" % randint(1, 10000)
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
-
-	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 5)
-
 
 
 createNewAAandWRTuser()
+
+
+# destroy team member test
+# loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
+# Go to "Edit Team" page
+# time.sleep(5)
+# browser.implicitly_wait(30)
+# browser.find_element_by_xpath("//a[contains(text(), 'Weekly Report Tool')]").click()
+# time.sleep(1)
+# browser.find_element_by_xpath("//a[contains(text(), 'Edit Team')]").click()
+# time.sleep(5)
+# browser.implicitly_wait(30)
+# findTeamMemeber = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']")
+# print("findTeamMemeber = %s" % len(findTeamMemeber))
+# findTeamMemeber[5].click()
+# browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+# browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+
+
+
+# def makeOneAAUser():
+# 	env = "qa"
+# 	randUser = "genUser%s" % randint(1, 10000)
+# 	print(randUser)
+# 	randEmail = "%s@mailinator.com" % randUser
+# 	print(randEmail)
+# 	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
+# makeOneAAUser()
+
+# createUserByCompanyLink("https://weeklyreport.qa.entreleadership.com/sign-up/AQG4mJ-PUWNPPaiE2e7DAi-ZnQKPVwnwRNCyaY5CsZPO7w", 50)
 
 # signUpAAuserForWRT("https://weeklyreport.test.entreleadership.com/get-started", "testUser2689@mailinator.com", "password" , False, False, 7)
