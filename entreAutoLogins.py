@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import time
 import datetime
+from numpy import base_repr
 
 #Argparse
 import argparse
@@ -77,13 +79,7 @@ def becomeEntreMember(url):
 	# 	print(i)
 
 def createNewUserAA(url, randUser, randEmail):
-	# randUser = "testUser%s" % randint(1, 10000)
-	# print(randUser)
-	# randEmail = "%s@mailinator.com" % randUser
-	# print(randEmail)
-
 	whichEnv = url.split('.')[1]
-
 
 	# root of domain
 	browser.get (url)
@@ -101,7 +97,7 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("Centerville Pediatric Dentistry")
+	browser.find_element_by_id("user_company_name").send_keys("Fluke Lasers")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# browser.implicitly_wait(30)
@@ -301,12 +297,23 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	browser.switch_to.window(browser.window_handles[0])
 
 	# Go to "Edit Team" page
+	print("before sleep before clicking weekly report tool")
 	time.sleep(1)
+	print("before clicking weekly report tool")
+	# sys.exit()
 	browser.find_element_by_xpath("//a[contains(text(), 'Weekly Report Tool')]").click()
 	time.sleep(1)
+	browser.refresh()
+	print("after clicking weekly report tool")
+	time.sleep(1)
+	print("after sleep after clicking weekly report tool")
 	browser.find_element_by_xpath("//a[contains(text(), 'Edit Team')]").click()
+	print("after clicking Edit Team")
+	time.sleep(3)
+	print("after waiting 3 sec after clicking Edit Team")
 	# CRUD members of team
 	browser.find_element_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']").click()
+	print("after clicking team meber")
 	browser.find_element_by_xpath("//button[contains(text(), 'Edit')]").click()
 	# edit team member first name
 	browser.find_element_by_name("firstName").click()
@@ -318,25 +325,39 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	browser.find_element_by_class_name("Button").click()
 
 	# delete team member from team
-	findTeamMemeber = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']")
+	findTeamMemeber = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']") #clickable by selenium
+	findTeamMemeberName = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
 	print("findTeamMemeber = %s" % len(findTeamMemeber))
+	print("sleeping before clicking 3rd team member")
+	time.sleep(2)
+	print("after 2 sec sleep")
 	findTeamMemeber[2].click()
+	print("after clicking 3rd member")
 	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
 	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+	print("User %s should have been deleted" % findTeamMemeberName[2].text)
 
-	
-
-
-def createNewAAandWRTuser():
+def createNewAAonly():
 	env = "qa"
-	# randUser = "genUser%s" % randint(1, 10000)
-	randUser = "kylecentervillepediatricdentistry"
+	randUser = "genUserBilly%s" % randint(1, 10000)
+	# randUser = "kylecentervillepediatricdentistry"
 	print(randUser)
 	randEmail = "%s@mailinator.com" % randUser
 	print(randEmail)
 
 	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 3)
+
+
+def createNewAAandWRTuser():
+	env = "test"
+	randUser = "testUser%s" % base_repr(int(time.time()), 36)
+	# randUser = "kylecentervillepediatricdentistry"
+	print(randUser)
+	randEmail = "%s@mailinator.com" % randUser
+	print(randEmail)
+
+	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
+	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 1)
 
 def loginWRT(user, pwd, env):
 	browser.get ("https://weeklyreport.%s.entreleadership.com/get-started" % (env))
@@ -400,7 +421,10 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 
 # becomeEntreMember("https://www.entreleadership.com")
 
-# createNewUserAA("https://www.qa.entreleadership.com")
+
+# randUser = "genUserBilly%s" % randint(1, 10000)
+# randEmail = "%s@mailinator.com" % randUser
+# createNewUserAA("https://www.qa.entreleadership.com", randUser, randEmail)
 
 
 # signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
@@ -419,7 +443,7 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 
 
 createNewAAandWRTuser()
-
+# createNewAAonly()
 
 # destroy team member test
 # loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")

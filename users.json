@@ -20,6 +20,15 @@
 		prodReporter:testelco-0@mailinator.com
     },
     {
+		prodReporter:testelco-1@mailinator.com
+    },
+    {
+		prodReporter:testelco-2@mailinator.com
+    },
+    {
         manyWRTusers:genUser7148@mailinator.com
+    },
+    {
+        newUser:testMyName@mailinator.com
     }
 ]
