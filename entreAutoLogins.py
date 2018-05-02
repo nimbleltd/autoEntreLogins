@@ -150,6 +150,7 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.implicitly_wait(30)
 	wait = WebDriverWait(browser, 5)
 	element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
+	print("begun profile")
 	# select industry info
 
 	browser.find_element_by_xpath("//div[@id='profile-card-field-industry']//i[@class='fa fa-plus profile-card-field-icon plus']").click()
@@ -302,7 +303,9 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	print("before clicking weekly report tool")
 	# sys.exit()
 	browser.find_element_by_xpath("//a[contains(text(), 'Weekly Report Tool')]").click()
-	time.sleep(1)
+	time.sleep(2)
+	browser.refresh()
+	time.sleep(2)
 	browser.refresh()
 	print("after clicking weekly report tool")
 	time.sleep(1)
@@ -319,26 +322,39 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	browser.find_element_by_name("firstName").click()
 	time.sleep(1)
 	browser.find_element_by_name("firstName").clear()
+	time.sleep(1)
 	timestamp = datetime.datetime.now().strftime('%b-%d_%I:%M:%S')
+	time.sleep(1)
 	browser.find_element_by_name("firstName").send_keys("botWroteThis-%s" % timestamp)
+	time.sleep(1)
 	# same user new name
 	browser.find_element_by_class_name("Button").click()
 
-	# delete team member from team
-	findTeamMemeber = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']") #clickable by selenium
-	findTeamMemeberName = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
-	print("findTeamMemeber = %s" % len(findTeamMemeber))
-	print("sleeping before clicking 3rd team member")
-	time.sleep(2)
-	print("after 2 sec sleep")
-	findTeamMemeber[2].click()
-	print("after clicking 3rd member")
-	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
-	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
-	print("User %s should have been deleted" % findTeamMemeberName[2].text)
+# delete team member from team
+findTeamMemeberToBeDeleted = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']") #clickable by selenium
+findTeamMemeberNameToBeDeleted = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
+print("findTeamMemeberToBeDeleted = %s" % len(findTeamMemeberToBeDeleted))
+time.sleep(2)
+teamMemberThreeToBeDeleted = findTeamMemeberToBeDeleted[2]
+teamMemberThreeToBeDeleted.click()
+print("after clicking 3rd member")
+browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+print("User %s has been deleted, attempted" % findTeamMemeberNameToBeDeleted[2].text)
+
+findTeamMemeberNameAfterDeletion = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
+# time.sleep(2)
+print("teamMemberThreeToBeDeleted = %s" % teamMemberThreeToBeDeleted)
+print("findTeamMemeberNameAfterDeletion[2].text = %s" % findTeamMemeberNameAfterDeletion[2].text)
+
+if findTeamMemeberNameToBeDeleted[2].text == findTeamMemeberNameAfterDeletion[2].text:
+	print("User %s has been deleted" % findTeamMemeberNameToBeDeleted[2].text)
+else:
+	print("problem occured user: %s was not deleted" % findTeamMemeberNameToBeDeleted[2].text)
+
 
 def createNewAAonly():
-	env = "qa"
+	env = "test"
 	randUser = "genUserBilly%s" % randint(1, 10000)
 	# randUser = "kylecentervillepediatricdentistry"
 	print(randUser)
@@ -349,7 +365,7 @@ def createNewAAonly():
 
 
 def createNewAAandWRTuser():
-	env = "test"
+	env = "qa"
 	randUser = "testUser%s" % base_repr(int(time.time()), 36)
 	# randUser = "kylecentervillepediatricdentistry"
 	print(randUser)
@@ -357,7 +373,7 @@ def createNewAAandWRTuser():
 	print(randEmail)
 
 	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 1)
+	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 2)
 
 def loginWRT(user, pwd, env):
 	browser.get ("https://weeklyreport.%s.entreleadership.com/get-started" % (env))
