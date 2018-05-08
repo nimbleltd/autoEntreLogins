@@ -45,6 +45,7 @@ def loginWeeklyReport(url, email, pwd):
 	# browser.find_element_by_name("high").send_keys("blah blah blah blah")
 
 def loginEntre(url, email, pwd):
+
 	browser.get (url)
 	browser.find_element_by_link_text("Log In").click()
 	browser.find_element_by_name("email").send_keys(email)
@@ -132,43 +133,62 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_id("submitButton").click()
 
 	# initial user login
-	browser.implicitly_wait(30)
+	browser.implicitly_wait(35)
 	browser.find_element_by_name("email").send_keys(randEmail)
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_name("commit").click()
 
-	# all acces on boarding, watch intro video, click next
-	print("before waiting")
-	browser.implicitly_wait(30)
-	time.sleep(15)
-	browser.find_element_by_xpath("//button[@name='button']").click()
-	print("should have clicked Next now...")
+	# # all acces on boarding, watch intro video, click next
+	# print("before waiting")
+	# browser.implicitly_wait(30)
+	# time.sleep(15)
+	# browser.find_element_by_xpath("//button[@name='button']").click()
+	# print("should have clicked Next now...")
 
+	# Get-Started
+	browser.find_element_by_link_text("Get Started Now").click()
+
+	# Onboarding Steps
+	# ==========================================================
+	# Join Mastermind
+	# ================
+	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
+	print("click mm button")
+	time.sleep(1)
+	print("sleep before clicking 'join MM bullet link'")
+	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
+	print("before clicking join MM link to next page")
+	browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
+	# browser.find_element_by_partial_link_text("Join a Mastermind Group").click()
+	print("after clicking joining MM group link to new page")
+	# browser.find_element_by_link_text("Join a Mastermind Group").click()
+
+	# Edit profile page https://www.qa.entreleadership.com/mastermind 
+	browser.find_element_by_link_text("Edit My Profile").click()
 
 	# Completed your profile
 	#Industry
 	browser.implicitly_wait(30)
 	wait = WebDriverWait(browser, 5)
-	element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
-	print("begun profile")
-	# select industry info
+	# element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
+	# print("begun profile")
 
-	browser.find_element_by_xpath("//div[@id='profile-card-field-industry']//i[@class='fa fa-plus profile-card-field-icon plus']").click()
-	select_dropdown_value('user_industry', 'Financial Services')
+	# # select industry info
+	# browser.find_element_by_xpath("//div[@id='profile-card-field-industry']//i[@class='fa fa-plus profile-card-field-icon plus']").click()
+	# select_dropdown_value('user_industry', 'Financial Services')
 	
-	# save Industry changes
-	wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-form-industry')))
-	time.sleep(5)
-	# browser.implicitly_wait(30)
-	timeout = 5
-	try:
-		element_present = EC.presence_of_element_located((By.ID, 'profile-card-field-form-industry'))
-		WebDriverWait(browser, timeout).until(element_present)
-		browser.implicitly_wait(5)
-		time.sleep(5)
-		browser.find_element_by_xpath("//div[@id='profile-card-field-form-industry']//button[@type='submit']").click()
-	except:
-		print("busted, didn't find %s" % element_present)
+	# # save Industry changes
+	# wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-form-industry')))
+	# time.sleep(5)
+	# timeout = 5
+	# try:
+	# 	element_present = EC.presence_of_element_located((By.ID, 'profile-card-field-form-industry'))
+	# 	WebDriverWait(browser, timeout).until(element_present)
+	# 	browser.implicitly_wait(5)
+	# 	time.sleep(5)
+	# 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-industry']//button[@type='submit']").click()
+	# except:
+	# 	print("busted, didn't find %s" % element_present)
 
 	# Team Size 
 	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
@@ -181,10 +201,10 @@ def createNewUserAA(url, randUser, randEmail):
 	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
 	
-	# Go to the Next Page
-	browser.implicitly_wait(5)
-	time.sleep(9)
-	browser.find_element_by_xpath("//button[@data-event='completed_profile_setup']").click()
+	# # Go to the Next Page
+	# browser.implicitly_wait(5)
+	# time.sleep(9)
+	# browser.find_element_by_xpath("//button[@data-event='completed_profile_setup']").click()
 
 	# Choose Friday 10am MM Group
 	browser.implicitly_wait(5)
@@ -262,6 +282,7 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 			time.sleep(5)
 			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 		except Exception:
+			print("Not my first login")
 			pass
 
 	# Invite Team
@@ -301,9 +322,15 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	print("before sleep before clicking weekly report tool")
 	time.sleep(1)
 	print("before clicking weekly report tool")
-	# sys.exit()
+	print("about to exit program")
+	sys.exit()
+	sys.exit(0)
+	print("exited")
+	# os.system("pause")
+	# time.sleep(45)
 	browser.find_element_by_xpath("//a[contains(text(), 'Weekly Report Tool')]").click()
 	time.sleep(2)
+	browser.refresh()
 	browser.refresh()
 	time.sleep(2)
 	browser.refresh()
@@ -326,31 +353,31 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 	timestamp = datetime.datetime.now().strftime('%b-%d_%I:%M:%S')
 	time.sleep(1)
 	browser.find_element_by_name("firstName").send_keys("botWroteThis-%s" % timestamp)
-	time.sleep(1)
+	time.sleep(2)
 	# same user new name
 	browser.find_element_by_class_name("Button").click()
 
-# delete team member from team
-findTeamMemeberToBeDeleted = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']") #clickable by selenium
-findTeamMemeberNameToBeDeleted = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
-print("findTeamMemeberToBeDeleted = %s" % len(findTeamMemeberToBeDeleted))
-time.sleep(2)
-teamMemberThreeToBeDeleted = findTeamMemeberToBeDeleted[2]
-teamMemberThreeToBeDeleted.click()
-print("after clicking 3rd member")
-browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
-browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
-print("User %s has been deleted, attempted" % findTeamMemeberNameToBeDeleted[2].text)
+	# delete team member from team
+	findTeamMemeberToBeDeleted = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']") #clickable by selenium
+	findTeamMemeberNameToBeDeleted = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
+	print("findTeamMemeberToBeDeleted = %s" % len(findTeamMemeberToBeDeleted))
+	time.sleep(2)
+	teamMemberThreeToBeDeleted = findTeamMemeberToBeDeleted[2]
+	teamMemberThreeToBeDeleted.click()
+	print("after clicking 3rd member")
+	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+	browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
+	print("User %s has been deleted, attempted" % findTeamMemeberNameToBeDeleted[2].text)
 
-findTeamMemeberNameAfterDeletion = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
-# time.sleep(2)
-print("teamMemberThreeToBeDeleted = %s" % teamMemberThreeToBeDeleted)
-print("findTeamMemeberNameAfterDeletion[2].text = %s" % findTeamMemeberNameAfterDeletion[2].text)
+	findTeamMemeberNameAfterDeletion = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel-label']") # list of names of users on the page
+	# time.sleep(2)
+	# print("teamMemberThreeToBeDeleted = %s" % findTeamMemeberNameToBeDeleted[2].text)
+	# print("findTeamMemeberNameAfterDeletion[2].text = %s" % findTeamMemeberNameAfterDeletion[2].text)
 
-if findTeamMemeberNameToBeDeleted[2].text == findTeamMemeberNameAfterDeletion[2].text:
-	print("User %s has been deleted" % findTeamMemeberNameToBeDeleted[2].text)
-else:
-	print("problem occured user: %s was not deleted" % findTeamMemeberNameToBeDeleted[2].text)
+	if findTeamMemeberNameToBeDeleted[2].text == findTeamMemeberNameAfterDeletion[2].text:
+		print("User %s has been deleted" % findTeamMemeberNameToBeDeleted[2].text)
+	else:
+		print("problem occured user: %s was not deleted" % findTeamMemeberNameToBeDeleted[2].text)
 
 
 def createNewAAonly():
@@ -362,18 +389,6 @@ def createNewAAonly():
 	print(randEmail)
 
 	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-
-
-def createNewAAandWRTuser():
-	env = "qa"
-	randUser = "testUser%s" % base_repr(int(time.time()), 36)
-	# randUser = "kylecentervillepediatricdentistry"
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
-
-	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 2)
 
 def loginWRT(user, pwd, env):
 	browser.get ("https://weeklyreport.%s.entreleadership.com/get-started" % (env))
@@ -424,6 +439,160 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 # =================
 # loginWRT("genUser2317@mailinator.com", "password", "qa")
 
+def createNewAAandWRTuser():
+	env = "qa"
+	randUser = "testUser%s" % base_repr(int(time.time()), 36)
+	# randUser = "kylecentervillepediatricdentistry"
+	print(randUser)
+	randEmail = "%s@mailinator.com" % randUser
+	print(randEmail)
+
+	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
+	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 2)
+
+def newDashBoardOnboardingSteps(whichEnv):
+	print("sleep before clicking 'join MM bullet link'")
+	# browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
+	print("before clicking join MM link to next page")
+	browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
+	# browser.find_element_by_partial_link_text("Join a Mastermind Group").click()
+	print("after clicking joining MM group link to new page")
+	# browser.find_element_by_link_text("Join a Mastermind Group").click()
+
+	# Edit profile page https://www.qa.entreleadership.com/mastermind 
+	browser.find_element_by_link_text("Edit My Profile").click()
+	
+	# Edit User profile so we can pass MM min signup requirments
+	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	select_dropdown_value('user_num_of_employees', '2-10')
+	browser.implicitly_wait(5)
+	time.sleep(1)
+	browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
+	# Gross Revenue 
+	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
+	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
+
+	#  Go to MM
+	time.sleep(5)
+	browser.find_element_by_xpath("//a[contains(text(), 'Mastermind')]").click()
+
+	#  Sign me up for an MM Group
+	# time.sleep(2)
+	# browser.refresh()
+	# time.sleep(3)
+	# browser.refresh()
+	browser.find_element_by_xpath("//a[contains(text(), 'Sign Me Up for a Group!')]").click()
+	browser.implicitly_wait(5)
+	time.sleep(5)
+	if whichEnv == "qa":
+		browser.find_element_by_id("mastermind-group-92").click() # qa
+	else:
+		browser.find_element_by_id("mastermind-group-133").click() # test
+	browser.find_element_by_xpath("//input[@value='Sign Me Up!']").click()
+	time.sleep(5)
+
+	#  Go back to dashboard
+	browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
+
+	# Set Up Weekly Report Tool
+	# browser.find_element_by_xpath("//a[contains(text(), 'Set Up Weekly Report Tool')]").click()
+	browser.find_element_by_link_text("Set Up Weekly Report Tool").click()
+	browser.find_element_by_link_text("Set up the Weekly Report Tool").click()
+
+	# WRT get started
+	browser.find_element_by_link_text("Get Started").click()
+	#  Enter job title
+	browser.find_element_by_name("title").send_keys("Nerf Herder")
+	browser.implicitly_wait(10)
+	time.sleep(5)
+	browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+
+	
+
+
+def onbpardFB():
+	# # signup for Facebook
+	browser.switch_to.window(browser.window_handles[0])
+	browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
+	browser.find_element_by_link_text("Join our Facebook Commmunity").click()
+	# browser.find_element_by_link_text("Join our Facebook Community").click()
+	# browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
+	# browser.find_element_by_xpath("//a[contains(@href,'Join our Facebook Community')]").click()
+	# browser.find_element_by_partial_link_text("facebook").click()
+	# isLinkPointingToFb = browser.find_element_by_xpath("//a[contains(@href,'Facebook')]")
+	isLinkPointingToFb = browser.find_element_by_partial_link_text("facebook")
+	if isLinkPointingToFb == True:
+		print("link pointing to facebook")
+	else:
+		print("not pointing to facebook")
+
+
+def undoMMProfile():
+	browser.execute_script("window.open('https://www.qa.entreleadership.com/my_profile', 'new_window')")
+	# print("pause 3 seconds")
+	# time.sleep(3)
+	# print("3 sec pause complete")
+	# browser.refresh()
+	# print("refresh complete")
+	# time.sleep(2)
+	# print("2 sec sleep complete")
+	# #  Undo Team Size
+	# browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	# select_dropdown_value('')
+	# time.sleep(1)
+	# browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
+	# # Undo Gross Revenue
+	# browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	# select_dropdown_value('')
+	# browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
+
+def inviteWrtTeamMembers(email, num_users_to_create):
+	# Invite Team by copying link
+	browser.implicitly_wait(10)
+	time.sleep(10)
+	browser.find_element_by_xpath("//button[contains(text(), 'Copy Link')]").click()
+	comapnyLink = str(getClipboardData())
+	# drop un-needed chars on clipboard content
+	comapnyLink = comapnyLink[2:-1]
+	randUser = email.split('@')[0]
+	# Add n number users to the Company WRT
+	for n in range(0, num_users_to_create):
+		print("n = %s" % n)
+		time.sleep(1)
+		# browser.switch_to.window(browser.window_handles[(n-1)])
+		browser.execute_script("window.open('%s', 'tab%s')" % (comapnyLink, (n)))
+		browser.switch_to.window('tab%s' % (n))
+		time.sleep(2)
+		try:
+			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+			browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
+			browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
+			browser.find_element_by_xpath("//input[@name='lastName']").send_keys("%s-%s" % (randUser, n))
+			browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
+			browser.find_element_by_xpath("//input[@name='password']").send_keys("password")
+			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+			browser.implicitly_wait(20)
+			time.sleep(10)
+			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
+		except:
+			pass
+	browser.switch_to.window(browser.window_handles[0])
+
+def openBrowserSubmitReportOfOneUser(email, how_many_to_submit_reports):
+	# open new browser and login via 
+	browser = webdriver.Chrome()
+	print(email, how_many_to_submit_reports)
+
+def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
+	loginEntre("https://www.%s.entreleadership.com" % (env), email, pwd)
+	time.sleep(2)
+	newDashBoardOnboardingSteps('qa')
+	inviteWrtTeamMembers(email, num_users_to_create)
+	undoMMProfile()
+	onbpardFB()
+	# openBrowserSubmitReportOfOneUser(email, 1)
 
 
 # =====================================================================
@@ -458,8 +627,10 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 # Challenge Create new AA user and add 7 team members to his WRT Company
 
 
-createNewAAandWRTuser()
+# createNewAAandWRTuser()
 # createNewAAonly()
+
+loginAndTestNewOnboarding("qa", "testUserP87W3S@mailinator.com", "password", 1)
 
 # destroy team member test
 # loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
