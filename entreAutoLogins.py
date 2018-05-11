@@ -446,6 +446,7 @@ def createNewAAandWRTuser():
 	print(randUser)
 	randEmail = "%s@mailinator.com" % randUser
 	print(randEmail)
+	return randEmail
 
 	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
 	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 2)
@@ -516,16 +517,7 @@ def onbpardFB():
 	browser.switch_to.window(browser.window_handles[0])
 	browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
 	browser.find_element_by_link_text("Join our Facebook Commmunity").click()
-	# browser.find_element_by_link_text("Join our Facebook Community").click()
-	# browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
-	# browser.find_element_by_xpath("//a[contains(@href,'Join our Facebook Community')]").click()
-	# browser.find_element_by_partial_link_text("facebook").click()
-	# isLinkPointingToFb = browser.find_element_by_xpath("//a[contains(@href,'Facebook')]")
-	isLinkPointingToFb = browser.find_element_by_partial_link_text("facebook")
-	if isLinkPointingToFb == True:
-		print("link pointing to facebook")
-	else:
-		print("not pointing to facebook")
+	browser.find_element_by_xpath("//a[contains(text(), 'Join our Facebook Community')]").click()
 
 
 def undoMMProfile():
@@ -580,20 +572,115 @@ def inviteWrtTeamMembers(email, num_users_to_create):
 			pass
 	browser.switch_to.window(browser.window_handles[0])
 
-def openBrowserSubmitReportOfOneUser(email, how_many_to_submit_reports):
+def openBrowserSubmitReportOfOneUser(email, how_many_to_submit_reports, password):
 	# open new browser and login via 
-	browser = webdriver.Chrome()
+	# browser = webdriver.Chrome()
 	print(email, how_many_to_submit_reports)
+	randUser = email.split('@')[0]
+	browser.get("https://weeklyreport.qa.entreleadership.com/sign-in")
+	#  sign in to WRT 
+	browser.find_element_by_name("email").send_keys("%s-0@mailinator.com" % randUser)
+	browser.find_element_by_name("password").send_keys(password)
+	browser.find_element_by_class_name("Button").click()
+	browser.implicitly_wait(35)
+	# select leader
+	browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
+	browser.find_element_by_xpath("//span[@name='testFirstName %s']" % randUser).click()
+	browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
+	time.sleep(2)
+	browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+	
+def randEmailUser():
+	env = "qa"
+	randUser = "testUser%s" % base_repr(int(time.time()), 36)
+	print(randUser)
+	randEmail = "%s@mailinator.com" % randUser
+	print(randEmail)
+	return randEmail
+
+
+def createNewUserAA_NewOnboarding(url, randUser, randEmail):
+	whichEnv = url.split('.')[1]
+
+	# root of domain
+	browser.get (url)
+	
+	# go to allaccess
+	browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+
+	browser.find_element_by_partial_link_text("Become").click()
+	
+	# go to sign up page for allaccess
+	browser.find_element_by_partial_link_text("Become").click()
+
+	# fill out new All Access member form
+	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
+	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
+	browser.find_element_by_id("user_email").send_keys(randEmail)
+	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
+	browser.find_element_by_id("user_company_name").send_keys("summit test")
+	browser.find_element_by_name("password").send_keys("password")
+	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
+	# browser.implicitly_wait(30)
+	# time.sleep(3)
+	browser.find_element_by_name("commit").click() # submit create new user
+
+	if whichEnv == 'qa':
+		print("TestEnv = %s" % whichEnv)
+		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
+		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+		browser.find_element_by_id("coupon_submit").click() # apply discount code
+		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	else:
+		print("TestEnv = %s \nskipping discount code test" % whichEnv)
+		browser.implicitly_wait(5)
+		time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	
+
+	
+	# payment page
+	iframe = browser.find_element_by_id("z_hppm_iframe")
+	browser.switch_to.frame(iframe)
+	browser.find_element_by_id("input-creditCardNumber").send_keys("5454545454545454")
+	select_dropdown_value('input-creditCardExpirationMonth', '03')
+	select_dropdown_value('input-creditCardExpirationYear', '2037')
+	browser.find_element_by_id("input-cardSecurityCode").send_keys("989")
+	select_dropdown_value('input-creditCardState', 'Tennessee')
+	browser.find_element_by_id("input-creditCardAddress1").send_keys("123 Test Dr")
+	browser.find_element_by_id("input-creditCardCity").send_keys("Nashville")
+	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
+	browser.find_element_by_id("submitButton").click()
+
+	# initial user login
+	browser.implicitly_wait(35)
+	browser.find_element_by_name("email").send_keys(randEmail)
+	browser.find_element_by_name("password").send_keys("password")
+	browser.find_element_by_name("commit").click()
+
+def getstartedURL():
+	browser.find_element_by_link_text("Get Started Now").click()
+
+
+def newUserTestNewOnboarding(env, email, pwd, num_users_to_create):
+	randUser = email.split('@')[0]
+	createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
+	getstartedURL()
+	newDashBoardOnboardingSteps(env)
+	inviteWrtTeamMembers(email, num_users_to_create)
+	# undoMMProfile()
+	onbpardFB()
+	openBrowserSubmitReportOfOneUser(email, 1)
+
 
 def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
 	loginEntre("https://www.%s.entreleadership.com" % (env), email, pwd)
 	time.sleep(2)
-	newDashBoardOnboardingSteps('qa')
+	newDashBoardOnboardingSteps(env)
 	inviteWrtTeamMembers(email, num_users_to_create)
 	undoMMProfile()
 	onbpardFB()
 	# openBrowserSubmitReportOfOneUser(email, 1)
-
 
 # =====================================================================
 
@@ -630,7 +717,13 @@ def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
 # createNewAAandWRTuser()
 # createNewAAonly()
 
-loginAndTestNewOnboarding("qa", "testUserP87W3S@mailinator.com", "password", 1)
+# loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
+# loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
+
+# newUserTestNewOnboarding("qa", randEmailUser(), "password", 2)
+
+# newUserTestNewOnboarding("qa", 'legayusernotonboarded@mailinator.com', "password", 1)
+openBrowserSubmitReportOfOneUser('testUserP8IZ7F@mailinator.com', 1, 'password')
 
 # destroy team member test
 # loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
