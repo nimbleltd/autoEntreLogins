@@ -9,6 +9,9 @@ from numpy import base_repr
 #Argparse
 import argparse
 
+# beautiful soup
+import bs4 as bs
+
 # Selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -19,6 +22,7 @@ from selenium.webdriver.support.ui import Select
 
 # Standard Libs
 from random import *
+import random
 import subprocess # <-- to get clipboarData
 
 browser = webdriver.Chrome()
@@ -480,8 +484,8 @@ def newDashBoardOnboardingSteps(whichEnv):
 	browser.find_element_by_xpath("//a[contains(text(), 'Mastermind')]").click()
 
 	#  Sign me up for an MM Group
-	# time.sleep(2)
-	# browser.refresh()
+	time.sleep(5)
+	browser.refresh()
 	# time.sleep(3)
 	# browser.refresh()
 	browser.find_element_by_xpath("//a[contains(text(), 'Sign Me Up for a Group!')]").click()
@@ -557,31 +561,117 @@ def inviteWrtTeamMembers(email, start_num, end_num):
 def teamMemberLoginSelectLeader(email, num_start, num_end, password):
 	# open new browser and login via 
 	# browser = webdriver.Chrome()
-	for member in range(num_start, num_end):
-		browser = webdriver.Chrome()
-		print(email,", team me number = %s" % member)
+	for memberNum in range(num_start, num_end):
+		# browser = webdriver.Chrome()
+		print(email,", team number = %s" % memberNum)
 		randUser = email.split('@')[0]
-		browser.get("https://weeklyreport.qa.entreleadership.com/sign-in")
+		teamMemberEmail = "%s-%s@mailinator.com" % (randUser, memberNum)
+		# browser.get("https://weeklyreport.qa.entreleadership.com/sign-in")
 		time.sleep(0.5)
+		# Sign out of Owner Account
+		browser.get("https://weeklyreport.qa.entreleadership.com/sign-out")
 		#  sign in to WRT 
-		browser.find_element_by_name("email").send_keys("%s-%s@mailinator.com" % (randUser, member))
-		browser.find_element_by_name("password").send_keys(password)
-		browser.find_element_by_class_name("Button").click()
-		browser.implicitly_wait(35)
-		# select leader
+		loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', teamMemberEmail, 'password')
+		browser.implicitly_wait(15)
+		time.sleep(8)
+
+		# Select a leader
 		browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
 		time.sleep(1)
-		if member == 0:
+		if memberNum == 0:
 			browser.find_element_by_xpath("//span[@name='testFirstName %s']" % randUser).click()
-		elif member == 1:
+		elif memberNum == 1:
 			browser.find_element_by_xpath("//span[@name='fName %s-0']" % randUser).click()
-		elif member > 1:
+		elif memberNum == 2:
+			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
+		elif memberNum == 3:
+			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
+			time.sleep(0.5 )
+			browser.find_element_by_xpath("//span[@name='fName %s-0']" % randUser).click()
+		elif memberNum > 3:
 			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
 		
-		# browser.find_element_by_xpath("//span[@name='testFirstName %s']" % randUser).click()
 		browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
 		time.sleep(2)
 		browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+		browser.implicitly_wait(15)
+		time.sleep(9)
+		# fill out WRT weekly form Previous Week
+		print("signing out")
+		browser.find_element_by_xpath("//a[contains(text(), 'sign out')]").click()
+		# browser.implicitly_wait(15)
+		time.sleep(5)
+		print("loggin back in")
+		loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', teamMemberEmail, 'password')
+		time.sleep(5)
+		completeWRTform('previousWeek', memberNum, teamMemberEmail)
+		# browser.get("https://weeklyreport.qa.entreleadership.com")
+		completeWRTform('currentWeek', memberNum, teamMemberEmail)
+
+def completeWRTform(whichWeek, memberNum, teamMemberEmail):
+	# browser = webdriver.Chrome()
+	# html = browser.execute_script('return document.documentElement.outerHTML')
+	# print("==================================================")
+	# html = browser.execute_script('return document.documentElement.outerHTML')
+	# soup = bs.BeautifulSoup(html, 'html.parser')
+	# print(soup.prettify)
+	# print("==================================================")
+	# browser.implicitly_wait(15)
+	# print("refreshing")
+	# loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', teamMemberEmail, 'password')
+	# browser.get("https://weeklyreport.qa.entreleadership.com")
+
+	# print("after refreshing")
+	browser.implicitly_wait(3)
+	time.sleep(1)
+	print("browser refresh y'all")
+	score = [20,40,60,80,100]
+	randScore = random.choice(score)
+	if whichWeek == 'previousWeek':
+		week = 'previous -%s' % memberNum
+		additional = 'nope'
+		dateRange = 'previous'
+	elif whichWeek == "currentWeek":
+		week = 'current -%s' % memberNum
+		additional = 'nada'
+		dateRange = 'current'
+
+	# print variabels
+	print("randScore = %s" % randScore)
+	print("whichWeek = %s" % whichWeek)
+	# fill out your high for the week
+	# time.sleep(3)
+	print("go to wrt form page")
+	browser.get ("https://weeklyreport.qa.entreleadership.com")
+	# browser.find_element_by_name("high").click()
+	# browser.find_element_by_name("high").send_keys(week)
+	browser.find_element_by_xpath("//textarea[@name='high']").send_keys(week)
+	
+	# low for the week
+	browser.find_element_by_xpath("//textarea[@name='low']").send_keys(week)
+
+	# stress level
+	stressElement = browser.find_element_by_xpath("//input[@name='stress'][@value='%s']" % randScore)
+	browser.execute_script("arguments[0].click();",stressElement)
+
+	# morale level
+	moraleElement = browser.find_element_by_xpath("//input[@name='morale'][@value='%s']" % randScore)
+	browser.execute_script("arguments[0].click();",moraleElement)
+
+	# workload level
+	workloadElement = browser.find_element_by_xpath("//input[@name='workload'][@value='%s']" % randScore)
+	browser.execute_script("arguments[0].click();",workloadElement)
+
+	# Anything Else
+	browser.find_element_by_xpath("//textarea[@name='extra']").send_keys(week)
+
+	# select which date range to submit
+	browser.find_element_by_xpath("//div[@value='%s']" % dateRange).click()
+
+	# Submit Report
+	time.sleep(1)
+	browser.find_element_by_xpath("//button[contains(text(), 'Submit Report')]").click()
+
 	
 
 # def submitPreviousWrtReport():
@@ -669,7 +759,7 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	newDashBoardOnboardingSteps(env)
 	inviteWrtTeamMembers(email, start_num, end_num)
 	onbpardFB()
-	teamMemberLoginSelectLeader(email, 0, 4, "password")
+	teamMemberLoginSelectLeader(email, start_num, end_num, "password")
 
 
 def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
@@ -709,19 +799,31 @@ def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
 # print(getClipboardData())
 
 # Challenge Create new AA user and add 7 team members to his WRT Company
-
-
 # createNewAAandWRTuser()
 # createNewAAonly()
-
 # loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
 # loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
 
-# newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,4)
+
+
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,1)
+# teamMemberLoginSelectLeader('testUserP96MPA@mailinator.com', 0, 1, 'password')
+
+
+# createNewUserAA("https://www.qa.entreleadership.com", 'testACHSummitPayment', 'testACHSummitPayment@mailinator.com')
+# testUserP8RUYJ@mailinator.com
+
+# loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', 'testUserP95H8I-0@mailinator.com', 'password')
+# time.sleep(3)
+# completeWRTform("previousWeek", 0)
+# time.sleep(0.5)
+# browser.get("https://weeklyreport.qa.entreleadership.com")
+# completeWRTform("currentWeek", 0)
+
 
 # newUserTestNewOnboarding("qa", 'legayusernotonboarded@mailinator.com', "password", 1)
 
-teamMemberLoginSelectLeader('testUserP8KX4O@mailinator.com', 0, 4, 'password')
+# teamMemberLoginSelectLeader('testUserP8KX4O@mailinator.com', 0, 4, 'password')
 
 # teamMemberLoginSelectLeader('testUserP8IZ7F@mailinator.com', 4, 'password')
 
