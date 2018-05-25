@@ -41,7 +41,7 @@ if args.verbose:
 #========================================== functions ===========================
 def loginWeeklyReport(url, email, pwd):
 	browser.get (url)
-
+	time.sleep(0.5)
 	browser.find_element_by_name("email").send_keys(email)
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_class_name("Button").click()
@@ -558,7 +558,7 @@ def inviteWrtTeamMembers(email, start_num, end_num):
 			pass
 	browser.switch_to.window(browser.window_handles[0])
 
-def teamMemberLoginSelectLeader(email, num_start, num_end, password):
+def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 	# open new browser and login via 
 	# browser = webdriver.Chrome()
 	for memberNum in range(num_start, num_end):
@@ -569,15 +569,15 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password):
 		# browser.get("https://weeklyreport.qa.entreleadership.com/sign-in")
 		time.sleep(0.5)
 		# Sign out of Owner Account
-		browser.get("https://weeklyreport.qa.entreleadership.com/sign-out")
+		browser.get("https://weeklyreport.%s.entreleadership.com/sign-out" % env)
 		#  sign in to WRT 
-		loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', teamMemberEmail, 'password')
+		loginWeeklyReport('https://weeklyreport.%s.entreleadership.com' % env, teamMemberEmail, 'password')
 		browser.implicitly_wait(15)
 		time.sleep(8)
 
 		# Select a leader
 		browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
-		time.sleep(1)
+		time.sleep(2)
 		if memberNum == 0:
 			browser.find_element_by_xpath("//span[@name='testFirstName %s']" % randUser).click()
 		elif memberNum == 1:
@@ -591,7 +591,16 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password):
 		elif memberNum > 3:
 			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
 		
-		browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
+		time.sleep(1)
+		clickOffSelectLeader = browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
+		action = webdriver.common.action_chains.ActionChains(browser)
+		action.move_to_element_with_offset(clickOffSelectLeader, 250, 0)
+		action.click()
+		try:
+			action.perform()
+		except:
+			print("she broke")
+		# browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
 		time.sleep(2)
 		browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 		browser.implicitly_wait(15)
@@ -602,13 +611,13 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password):
 		# browser.implicitly_wait(15)
 		time.sleep(5)
 		print("loggin back in")
-		loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', teamMemberEmail, 'password')
+		loginWeeklyReport('https://weeklyreport.%s.entreleadership.com' % env, teamMemberEmail, 'password')
 		time.sleep(5)
-		completeWRTform('previousWeek', memberNum, teamMemberEmail)
+		completeWRTform('previousWeek', memberNum, teamMemberEmail, env)
 		# browser.get("https://weeklyreport.qa.entreleadership.com")
-		completeWRTform('currentWeek', memberNum, teamMemberEmail)
+		completeWRTform('currentWeek', memberNum, teamMemberEmail, env)
 
-def completeWRTform(whichWeek, memberNum, teamMemberEmail):
+def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	# browser = webdriver.Chrome()
 	# html = browser.execute_script('return document.documentElement.outerHTML')
 	# print("==================================================")
@@ -642,7 +651,7 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail):
 	# fill out your high for the week
 	# time.sleep(3)
 	print("go to wrt form page")
-	browser.get ("https://weeklyreport.qa.entreleadership.com")
+	browser.get ("https://weeklyreport.%s.entreleadership.com" % env)
 	# browser.find_element_by_name("high").click()
 	# browser.find_element_by_name("high").send_keys(week)
 	browser.find_element_by_xpath("//textarea[@name='high']").send_keys(week)
@@ -663,7 +672,7 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail):
 	browser.execute_script("arguments[0].click();",workloadElement)
 
 	# Anything Else
-	browser.find_element_by_xpath("//textarea[@name='extra']").send_keys(week)
+	browser.find_element_by_xpath("//textarea[@name='extra']").send_keys(additional)
 
 	# select which date range to submit
 	browser.find_element_by_xpath("//div[@value='%s']" % dateRange).click()
@@ -759,7 +768,7 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	newDashBoardOnboardingSteps(env)
 	inviteWrtTeamMembers(email, start_num, end_num)
 	onbpardFB()
-	teamMemberLoginSelectLeader(email, start_num, end_num, "password")
+	teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
 
 
 def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
@@ -805,9 +814,15 @@ def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
 # loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
 
 
-
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,1)
+# ***********************************
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,4)
 # teamMemberLoginSelectLeader('testUserP96MPA@mailinator.com', 0, 1, 'password')
+
+# for memberNum in range (4, 19):
+	# teamMemberEmail = "testuserp9743b-%s@mailinator.com" % memberNum
+# teamMemberLoginSelectLeader("testUserP9AIIB@mailinator.com", 0, 4, "password", "qa")
+	# completeWRTform('previousWeek', memberNum, teamMemberEmail, "qa")
+	# completeWRTform('currentWeek', memberNum, teamMemberEmail, "qa")
 
 
 # createNewUserAA("https://www.qa.entreleadership.com", 'testACHSummitPayment', 'testACHSummitPayment@mailinator.com')
@@ -831,7 +846,9 @@ newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,1)
 # loginWRT('testUserP8IZ7F@mailinator.com', 'password', 'qa')
 # inviteWrtTeamMembers('testUserP8IZ7F@mailinator.com', 2, 4)
 # **********************************************************************
-
+# loginWRT('testuserp9743b@mailinator.com', 'password', 'qa')
+# inviteWrtTeamMembers('testuserp9743b@mailinator.com', 4, 21)
+# teamMemberLoginSelectLeader("testuserp9743b@mailinator.com", 4, 19, "password", "qa")
 
 # destroy team member test
 # loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
