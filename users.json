@@ -39,5 +39,11 @@
     },
     {
         testDevUser:testUserP87W3S@mailinator.com
+    },
+    {
+        legacyQAuser:legayusernotonboarded@mailinator.com
+    },
+    {
+        shipItGif:https://media.giphy.com/media/hMmnUljH10Wpq/giphy.gif
     }
 ]

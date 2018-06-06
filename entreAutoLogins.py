@@ -39,6 +39,12 @@ if args.verbose:
     print("verbosity turned on")
 
 #========================================== functions ===========================
+def waitUntilExists(locatorType, element):
+	element = "browser.find_element(By.%s, %s)" % (locatorType, element)
+
+	# WebDriverWait(browser, 10).until(ExpectedCondition.invisibility_of_element_located((By.ID, element)))
+
+
 def loginWeeklyReport(url, email, pwd):
 	browser.get (url)
 	time.sleep(0.5)
@@ -475,6 +481,7 @@ def newDashBoardOnboardingSteps(whichEnv):
 	time.sleep(1)
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
 	# Gross Revenue 
+	time.sleep(1)
 	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
 	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
@@ -577,7 +584,7 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 
 		# Select a leader
 		browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
-		time.sleep(2)
+		time.sleep(1)
 		if memberNum == 0:
 			browser.find_element_by_xpath("//span[@name='testFirstName %s']" % randUser).click()
 		elif memberNum == 1:
@@ -610,7 +617,7 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		browser.find_element_by_xpath("//a[contains(text(), 'sign out')]").click()
 		# browser.implicitly_wait(15)
 		time.sleep(5)
-		print("loggin back in")
+		print("logging back in")
 		loginWeeklyReport('https://weeklyreport.%s.entreleadership.com' % env, teamMemberEmail, 'password')
 		time.sleep(5)
 		completeWRTform('previousWeek', memberNum, teamMemberEmail, env)
@@ -681,13 +688,6 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	time.sleep(1)
 	browser.find_element_by_xpath("//button[contains(text(), 'Submit Report')]").click()
 
-	
-
-# def submitPreviousWrtReport():
-# 	# Do things
-
-# def submitCurrentWrtReport():
-# 	# Do things
 
 def randEmailUser():
 	env = "qa"
@@ -717,7 +717,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("summit test")
+	browser.find_element_by_id("user_company_name").send_keys("Auth0 V9 Test")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# browser.implicitly_wait(30)
@@ -764,11 +764,16 @@ def getstartedURL():
 def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	randUser = email.split('@')[0]
 	createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
+	cookieChecker()
 	getstartedURL()
+	cookieChecker()
 	newDashBoardOnboardingSteps(env)
+	cookieChecker()
 	inviteWrtTeamMembers(email, start_num, end_num)
+	cookieChecker()
 	onbpardFB()
 	teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
+	cookieChecker()
 
 
 def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
@@ -777,6 +782,28 @@ def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
 	newDashBoardOnboardingSteps(env)
 	inviteWrtTeamMembers(email, num_users_to_create)
 	onbpardFB()
+
+def cookieChecker():
+	cookieSizeShowThreshold = 700
+	cookieSizeWarningThreshold = 1000
+	cookieSizeTopThreshold = 1550
+	cookies_list = browser.gecookies()
+	cookies_dict = {}
+	print("\nShowing cookieSizes > %s:" %  cookieSizeShowThreshold)
+	for cookie in cookies_list:
+		cookies_dict[cookie['name']] = cookie['value']
+	for each in cookies_dict:
+		cookieSize = sys.getsizeof(cookies_dict[each])
+		if cookieSize > cookieSizeShowThreshold and cookieSize < cookieSizeWarningThreshold:
+			print("    cookieSize: %s  CookieName: %s" % ( cookieSize, each))
+		elif cookieSize >= cookieSizeWarningThreshold and cookieSize < cookieSizeTopThreshold:
+			print("\nWARNING exceeding cookieSizeWarningThreshold of %s: \n    ==========================================\n    cookieSize: %s  CookieName: %s\n    ==========================================\n" % (cookieSizeWarningThreshold, cookieSize, each))
+		elif cookieSize >= cookieSizeTopThreshold:
+			print("\nHOUSTON WE HAVE A PROBLEM we are exceeding cookieSizeTopThreshold of %s: \n    ==========================================\n    cookieSize: %s  CookieName: %s\n    ==========================================\n" % (cookieSizeTopThreshold, cookieSize, each))
+
+# def wrtPasswordReset:
+	# https://weeklyreport.entreleadership.com/forgot-password
+	# https://weeklyreport.entreleadership.com/account/5b17f15155f2302168fefeec/reset-password
 
 # =====================================================================
 
@@ -815,10 +842,32 @@ def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
 
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,4)
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
+
+
+# TEST cookie size
+# ===================================
+# loginWRT("genUser2317@mailinator.com", "password", "qa")
+# time.sleep(0.5)
+# cookieChecker()
+
+
+# test if things exist on page function
+# browser.get("http://www.qa.entreleadership.com")
+# browser.find_element_by_partial_link_text("Become").click()
+# browser.find_element_by_partial_link_text("Become").click()
+# # waitUntilExists("ID", "user_first_name")
+# if waitUntilExists("ID", "user_first_name") == True:
+# 	print("found that shit")
+# else:
+# 	print("where the hell did it go?")
+# browser.find_element_by_id("user_first_name").send_keys("testFirstName")
+
+
 # teamMemberLoginSelectLeader('testUserP96MPA@mailinator.com', 0, 1, 'password')
 
-# for memberNum in range (4, 19):
+# Create additional users for team and submit wrts
+# for memberNum in range (22, 30):
 	# teamMemberEmail = "testuserp9743b-%s@mailinator.com" % memberNum
 # teamMemberLoginSelectLeader("testUserP9AIIB@mailinator.com", 0, 4, "password", "qa")
 	# completeWRTform('previousWeek', memberNum, teamMemberEmail, "qa")
@@ -846,9 +895,10 @@ newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,4)
 # loginWRT('testUserP8IZ7F@mailinator.com', 'password', 'qa')
 # inviteWrtTeamMembers('testUserP8IZ7F@mailinator.com', 2, 4)
 # **********************************************************************
+
 # loginWRT('testuserp9743b@mailinator.com', 'password', 'qa')
-# inviteWrtTeamMembers('testuserp9743b@mailinator.com', 4, 21)
-# teamMemberLoginSelectLeader("testuserp9743b@mailinator.com", 4, 19, "password", "qa")
+# inviteWrtTeamMembers('testuserp9743b@mailinator.com', 45, 47)
+# teamMemberLoginSelectLeader("testUserP9743B@mailinator.com",45, 47, "password", "qa")
 
 # destroy team member test
 # loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
