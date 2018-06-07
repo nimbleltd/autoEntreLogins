@@ -51,8 +51,6 @@ def loginWeeklyReport(url, email, pwd):
 	browser.find_element_by_name("email").send_keys(email)
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_class_name("Button").click()
-	# browser.implicitly_wait(30)
-	# browser.find_element_by_name("high").send_keys("blah blah blah blah")
 
 def loginEntre(url, email, pwd):
 
@@ -76,18 +74,12 @@ def becomeEntreMember(url):
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
 	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
 	browser.find_element_by_name("password").send_keys("password")
-	# browser.find_element_by_name("commit").click() # <- turn on when ready to create user
 
 	# open new tab in Mailinator to watch emails
 	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
 	browser.switch_to.window(browser.window_handles[0]) #<- switch tabs
 	# browser.switch_to.window(browser.window_handles[1])
 	# browser.switch_to.window(browser.window_handles[-1])
-
-
-	# One Liner
-	# for i in open(credFile,'r').readlines():
-	# 	print(i)
 
 def createNewUserAA(url, randUser, randEmail):
 	whichEnv = url.split('.')[1]
@@ -148,13 +140,6 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_name("commit").click()
 
-	# # all acces on boarding, watch intro video, click next
-	# print("before waiting")
-	# browser.implicitly_wait(30)
-	# time.sleep(15)
-	# browser.find_element_by_xpath("//button[@name='button']").click()
-	# print("should have clicked Next now...")
-
 	# Get-Started
 	browser.find_element_by_link_text("Get Started Now").click()
 
@@ -169,9 +154,7 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
 	print("before clicking join MM link to next page")
 	browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
-	# browser.find_element_by_partial_link_text("Join a Mastermind Group").click()
 	print("after clicking joining MM group link to new page")
-	# browser.find_element_by_link_text("Join a Mastermind Group").click()
 
 	# Edit profile page https://www.qa.entreleadership.com/mastermind 
 	browser.find_element_by_link_text("Edit My Profile").click()
@@ -182,23 +165,6 @@ def createNewUserAA(url, randUser, randEmail):
 	wait = WebDriverWait(browser, 5)
 	# element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
 	# print("begun profile")
-
-	# # select industry info
-	# browser.find_element_by_xpath("//div[@id='profile-card-field-industry']//i[@class='fa fa-plus profile-card-field-icon plus']").click()
-	# select_dropdown_value('user_industry', 'Financial Services')
-	
-	# # save Industry changes
-	# wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-form-industry')))
-	# time.sleep(5)
-	# timeout = 5
-	# try:
-	# 	element_present = EC.presence_of_element_located((By.ID, 'profile-card-field-form-industry'))
-	# 	WebDriverWait(browser, timeout).until(element_present)
-	# 	browser.implicitly_wait(5)
-	# 	time.sleep(5)
-	# 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-industry']//button[@type='submit']").click()
-	# except:
-	# 	print("busted, didn't find %s" % element_present)
 
 	# Team Size 
 	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
@@ -625,19 +591,6 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		completeWRTform('currentWeek', memberNum, teamMemberEmail, env)
 
 def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
-	# browser = webdriver.Chrome()
-	# html = browser.execute_script('return document.documentElement.outerHTML')
-	# print("==================================================")
-	# html = browser.execute_script('return document.documentElement.outerHTML')
-	# soup = bs.BeautifulSoup(html, 'html.parser')
-	# print(soup.prettify)
-	# print("==================================================")
-	# browser.implicitly_wait(15)
-	# print("refreshing")
-	# loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', teamMemberEmail, 'password')
-	# browser.get("https://weeklyreport.qa.entreleadership.com")
-
-	# print("after refreshing")
 	browser.implicitly_wait(3)
 	time.sleep(1)
 	print("browser refresh y'all")
@@ -766,11 +719,8 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
 	cookieChecker()
 	getstartedURL()
-	cookieChecker()
 	newDashBoardOnboardingSteps(env)
-	cookieChecker()
 	inviteWrtTeamMembers(email, start_num, end_num)
-	cookieChecker()
 	onbpardFB()
 	teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
 	cookieChecker()
@@ -787,7 +737,7 @@ def cookieChecker():
 	cookieSizeShowThreshold = 700
 	cookieSizeWarningThreshold = 1000
 	cookieSizeTopThreshold = 1550
-	cookies_list = browser.gecookies()
+	cookies_list = browser.get_cookies()
 	cookies_dict = {}
 	print("\nShowing cookieSizes > %s:" %  cookieSizeShowThreshold)
 	for cookie in cookies_list:
@@ -802,41 +752,25 @@ def cookieChecker():
 			print("\nHOUSTON WE HAVE A PROBLEM we are exceeding cookieSizeTopThreshold of %s: \n    ==========================================\n    cookieSize: %s  CookieName: %s\n    ==========================================\n" % (cookieSizeTopThreshold, cookieSize, each))
 
 # def wrtPasswordReset:
+	# create a permanent wrtPasswordResetUser
 	# https://weeklyreport.entreleadership.com/forgot-password
 	# https://weeklyreport.entreleadership.com/account/5b17f15155f2302168fefeec/reset-password
+	# https://weeklyreport.entreleadership.com/account/<Auth0 ID>/reset-password
+
+# def aaPasswordReset:
+	# https://www.qa.entreleadership.com/users/password/reset
+
 
 # =====================================================================
 
 
 #========================================== main =================================
-
-# loginWeeklyReport("https://weeklyreport.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
-
-# loginEntre("https://www.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
-
-# becomeEntreMember("https://www.entreleadership.com")
-
-
-# randUser = "genUserBilly%s" % randint(1, 10000)
-# randEmail = "%s@mailinator.com" % randUser
-# createNewUserAA("https://www.qa.entreleadership.com", randUser, randEmail)
-
-
 # signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
 
 # signUpAAuserForWRT("https://weeklyreport.test.entreleadership.com/get-started", "testUser4365@mailinator.com", "password" , False)
 
 # signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4067@mailinator.com", "password", False) # testUser8890@mailinator.com
 
-# loginEntre("https://www.qa.entreleadership.com", getUsername("./creds.py"), getPwd("./creds.py"))
-
-# elementExists("https://www.test.entreleadership.com", "by_css_selector", "HeroButter-heading")
-
-# print(getClipboardData())
-
-# Challenge Create new AA user and add 7 team members to his WRT Company
-# createNewAAandWRTuser()
-# createNewAAonly()
 # loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
 # loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
 
@@ -850,19 +784,6 @@ newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
 # loginWRT("genUser2317@mailinator.com", "password", "qa")
 # time.sleep(0.5)
 # cookieChecker()
-
-
-# test if things exist on page function
-# browser.get("http://www.qa.entreleadership.com")
-# browser.find_element_by_partial_link_text("Become").click()
-# browser.find_element_by_partial_link_text("Become").click()
-# # waitUntilExists("ID", "user_first_name")
-# if waitUntilExists("ID", "user_first_name") == True:
-# 	print("found that shit")
-# else:
-# 	print("where the hell did it go?")
-# browser.find_element_by_id("user_first_name").send_keys("testFirstName")
-
 
 # teamMemberLoginSelectLeader('testUserP96MPA@mailinator.com', 0, 1, 'password')
 
@@ -902,22 +823,3 @@ newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
 
 # destroy team member test
 # loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
-# Go to "Edit Team" page
-# time.sleep(5)
-# browser.implicitly_wait(30)
-# browser.find_element_by_xpath("//a[contains(text(), 'Weekly Report Tool')]").click()
-# time.sleep(1)
-# browser.find_element_by_xpath("//a[contains(text(), 'Edit Team')]").click()
-# time.sleep(5)
-# browser.implicitly_wait(30)
-# findTeamMemeber = browser.find_elements_by_xpath("//div[@class='TeamMemberPanel TeamMemberPanel--admin']")
-# print("findTeamMemeber = %s" % len(findTeamMemeber))
-# findTeamMemeber[5].click()
-# browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
-# browser.find_element_by_xpath("//button[contains(text(), 'Delete')]").click()
-
-
-
-# createUserByCompanyLink("https://weeklyreport.qa.entreleadership.com/sign-up/AQG4mJ-PUWNPPaiE2e7DAi-ZnQKPVwnwRNCyaY5CsZPO7w", 50)
-
-# signUpAAuserForWRT("https://weeklyreport.test.entreleadership.com/get-started", "testUser2689@mailinator.com", "password" , False, False, 7)
