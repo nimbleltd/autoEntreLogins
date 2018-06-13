@@ -66,7 +66,10 @@ def becomeEntreMember(url):
 	randEmail = "%s@mailinator.com" % randUser
 	print(randEmail)
 	browser.get (url)
-	browser.find_element_by_partial_link_text("Become").click()
+	# browser.find_element_by_partial_link_text("Learn More").click()
+	browser.implicitly_wait(2)
+	browser.find_element_by_xpath("//a[contains(text(), 'Learn More')]").click()
+	browser.implicitly_wait(2)
 	browser.find_element_by_partial_link_text("Become").click()
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
 	browser.find_element_by_id("user_last_name").send_keys("testLastName")
@@ -567,7 +570,8 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		time.sleep(1)
 		clickOffSelectLeader = browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
 		action = webdriver.common.action_chains.ActionChains(browser)
-		action.move_to_element_with_offset(clickOffSelectLeader, 250, 0)
+		time.sleep(0.5)
+		action.move_to_element_with_offset(clickOffSelectLeader, 250, 150)
 		action.click()
 		try:
 			action.perform()
@@ -659,9 +663,10 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	
 	# go to allaccess
 	browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+	browser.implicitly_wait(3)
+	# browser.find_element_by_partial_link_text("Become").click()
+	browser.find_element_by_xpath("//a[@class='HeroButter-cta btn-primary btn-yellow']").click()
 
-	browser.find_element_by_partial_link_text("Become").click()
-	
 	# go to sign up page for allaccess
 	browser.find_element_by_partial_link_text("Become").click()
 
@@ -673,8 +678,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	browser.find_element_by_id("user_company_name").send_keys("Auth0 V9 Test")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
-	# browser.implicitly_wait(30)
-	# time.sleep(3)
+
 	browser.find_element_by_name("commit").click() # submit create new user
 
 	if whichEnv == 'qa':
@@ -719,9 +723,13 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
 	cookieChecker()
 	getstartedURL()
+	cookieChecker()
 	newDashBoardOnboardingSteps(env)
+	cookieChecker()
 	inviteWrtTeamMembers(email, start_num, end_num)
+	cookieChecker()
 	onbpardFB()
+	cookieChecker()
 	teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
 	cookieChecker()
 
@@ -739,7 +747,7 @@ def cookieChecker():
 	cookieSizeTopThreshold = 1550
 	cookies_list = browser.get_cookies()
 	cookies_dict = {}
-	print("\nShowing cookieSizes > %s:" %  cookieSizeShowThreshold)
+	# print("\nShowing cookieSizes > %s:" %  cookieSizeShowThreshold)
 	for cookie in cookies_list:
 		cookies_dict[cookie['name']] = cookie['value']
 	for each in cookies_dict:
