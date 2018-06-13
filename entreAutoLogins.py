@@ -39,6 +39,53 @@ if args.verbose:
     print("verbosity turned on")
 
 #========================================== functions ===========================
+
+#=================================== does element exist =========================
+def element_exists(locator_attribute, locator_text):
+	possible_locators = ["id", "xpath", "link text", "partial link text", "name", "class name", "css selector"]
+
+	if locator_attribute not in possible_locators:
+		raise BaseException("locator provided not within allowed locators which are : %s" % possible_locators)
+
+	try:
+		browser.find_element(locator_attribute, locator_text)
+		return True
+	except:
+		return False
+
+def assert_element_exists(locator_attribute, locator_text):
+	if not element_exists(locator_attribute, locator_text):
+		raise AssertionError("The requested element with '%s' of '%s' does not exist" % (locator_attribute, locator_text))
+	return
+
+def element_visible(element):
+	if element.is_displayed(): # <- selenium
+		return True
+	else:
+		return False
+
+def assert_element_visible(element):
+	if not element_visible(element):
+		raise AssertionError("Element is not displayed")
+
+def find_and_assert_element_visible(locator_type, search_term):
+	element = browser.find_element(locator_type, search_term)
+
+	if not element.is_displayed():
+		raise AssertionError("Element with locator type '%s' and named '%s' is not displayed" % (locator_type))
+	else:
+		print("Element %s visible" % search_term)
+
+# assert_element_exists('id', )
+
+def list_all_images_on_page():
+	# images = browser.find_elements_by_tag_name('img')
+	images = browser.find_element_by_xpath("//img[contains(@src,'/assets/el_logo_rev-1304b11dc193fcbe45259eda7f2c00705646a4a3cb029963ba33f583a7462620.svg')]")
+
+
+	# for image in images:
+	print(images.get_attribute('src'))
+#================================================================================
 def waitUntilExists(locatorType, element):
 	element = "browser.find_element(By.%s, %s)" % (locatorType, element)
 
@@ -784,8 +831,9 @@ def cookieChecker():
 
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
-
+# newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
+browser.get ("http://www.qa.entreleadership.com")
+list_all_images_on_page()
 
 # TEST cookie size
 # ===================================
