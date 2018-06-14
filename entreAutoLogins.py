@@ -38,6 +38,11 @@ args = parser.parse_args()
 if args.verbose:
     print("verbosity turned on")
 
+# global variables
+mailservice_email = "entre-fd6968@inbox.mailtrap.io"
+mailservice_email_user = mailservice_email.split('@')[0]
+mailservice_domain = mailservice_email.split('@')[1]
+
 #========================================== functions ===========================
 
 #=================================== does element exist =========================
@@ -107,29 +112,11 @@ def loginEntre(url, email, pwd):
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_name("commit").click()
 
-def becomeEntreMember(url):
-	randUser = "testUser%s" % randint(1, 10000)
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
-	browser.get (url)
-	# browser.find_element_by_partial_link_text("Learn More").click()
-	browser.implicitly_wait(2)
-	browser.find_element_by_xpath("//a[contains(text(), 'Learn More')]").click()
-	browser.implicitly_wait(2)
-	browser.find_element_by_partial_link_text("Become").click()
-	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
-	browser.find_element_by_id("user_last_name").send_keys("testLastName")
-	browser.find_element_by_id("user_email").send_keys(randEmail)
-	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("La Hacienda")
-	browser.find_element_by_name("password").send_keys("password")
-
-	# open new tab in Mailinator to watch emails
-	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
-	browser.switch_to.window(browser.window_handles[0]) #<- switch tabs
-	# browser.switch_to.window(browser.window_handles[1])
-	# browser.switch_to.window(browser.window_handles[-1])
+# open new tab in Mailinator to watch emails
+# browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
+# browser.switch_to.window(browser.window_handles[0]) #<- switch tabs
+# browser.switch_to.window(browser.window_handles[1])
+# browser.switch_to.window(browser.window_handles[-1])
 
 def createNewUserAA(url, randUser, randEmail):
 	whichEnv = url.split('.')[1]
@@ -247,14 +234,6 @@ def createNewUserAA(url, randUser, randEmail):
 	# browser.find_element_by_link_text("Get Started").click()
 	browser.find_element_by_xpath("//a[@data-event='completed_ecoaching_sync']").click()
 
-	
-	# Open Mailinator to see
-	browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
-
-
-	# close driver
-	# browser.close()
-
 def select_dropdown_value(id, value):
 	selectOption = Select(browser.find_element_by_id(id))
 	option_selected = selectOption.select_by_value(value)
@@ -329,7 +308,7 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 		browser.switch_to.window('tab%s' % (n))
 		time.sleep(2)
 		try:
-			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@%s" % (randUser, n, mailservice_domain))
 			browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
 			browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
 			browser.find_element_by_xpath("//input[@name='lastName']").send_keys("%s-%s" % (randUser, n))
@@ -406,16 +385,6 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 		print("problem occured user: %s was not deleted" % findTeamMemeberNameToBeDeleted[2].text)
 
 
-def createNewAAonly():
-	env = "test"
-	randUser = "genUserBilly%s" % randint(1, 10000)
-	# randUser = "kylecentervillepediatricdentistry"
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
-
-	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-
 def loginWRT(email, password, env):
 	browser.get ("https://weeklyreport.%s.entreleadership.com/get-started" % (env))
 	browser.implicitly_wait(30)
@@ -433,7 +402,7 @@ def loginWRT(email, password, env):
 # ===================================================
 def createUserByCompanyLink(companyURL, num_users_to_create):
 	comapnyLink = companyURL
-	email = "makeManyUsers9998@mailinator.com"
+	# email = "makeManyUsers9998@mailinator.com"
 	randUser = email.split('@')[0]
 	# Add n number users to the Company WRT
 	for n in range(0, num_users_to_create):
@@ -444,7 +413,7 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 		browser.switch_to.window('tab%s' % (n))
 		time.sleep(2)
 		try:
-			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@%s" % (randUser, n, mailservice_domain))
 			browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
 			browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
 			browser.find_element_by_xpath("//input[@name='lastName']").send_keys(randUser)
@@ -460,23 +429,6 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 	browser.switch_to.window(browser.window_handles[0])
 
 # ===================================================
-
-# =================
-#  Forgot Password
-# =================
-# loginWRT("genUser2317@mailinator.com", "password", "qa")
-
-def createNewAAandWRTuser():
-	env = "qa"
-	randUser = "testUser%s" % base_repr(int(time.time()), 36)
-	# randUser = "kylecentervillepediatricdentistry"
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
-	# return randEmail
-
-	createNewUserAA("https://www.%s.entreleadership.com" % (env), randUser, randEmail)
-	signUpAAuserForWRT("https://weeklyreport.%s.entreleadership.com/get-started" % (env), randEmail, "password" , True, True, 2)
 
 def newDashBoardOnboardingSteps(whichEnv):
 	print("sleep before clicking 'join MM bullet link'")
@@ -499,6 +451,7 @@ def newDashBoardOnboardingSteps(whichEnv):
 	# Gross Revenue 
 	time.sleep(1)
 	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
+	time.sleep(0.5)
 	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
 
@@ -566,7 +519,7 @@ def inviteWrtTeamMembers(email, start_num, end_num):
 		browser.switch_to.window('tab%s' % (n))
 		time.sleep(2)
 		try:
-			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@mailinator.com" % (randUser, n))
+			browser.find_element_by_xpath("//input[@class='SelectBox PersistEmail-field']").send_keys("%s-%s@%s" % (randUser, n, mailservice_domain))
 			browser.find_element_by_xpath("//button[contains(text(), 'Sign Up')]").click()
 			browser.find_element_by_xpath("//input[@name='firstName']").send_keys("fName")
 			browser.find_element_by_xpath("//input[@name='lastName']").send_keys("%s-%s" % (randUser, n))
@@ -588,7 +541,7 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		# browser = webdriver.Chrome()
 		print(email,", team number = %s" % memberNum)
 		randUser = email.split('@')[0]
-		teamMemberEmail = "%s-%s@mailinator.com" % (randUser, memberNum)
+		teamMemberEmail = "%s-%s@%s" % (randUser, memberNum, mailservice_domain)
 		# browser.get("https://weeklyreport.qa.entreleadership.com/sign-in")
 		time.sleep(0.5)
 		# Sign out of Owner Account
@@ -601,8 +554,10 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		# Select a leader
 		browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
 		time.sleep(1)
+		cleanRandUser = randUser.replace('-', '')
+		cleanRandUser = cleanRandUser.replace('+', '')
 		if memberNum == 0:
-			browser.find_element_by_xpath("//span[@name='testFirstName %s']" % randUser).click()
+			browser.find_element_by_xpath("//span[@name='testFirstName %s']" % cleanRandUser).click()
 		elif memberNum == 1:
 			browser.find_element_by_xpath("//span[@name='fName %s-0']" % randUser).click()
 		elif memberNum == 2:
@@ -693,15 +648,6 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	browser.find_element_by_xpath("//button[contains(text(), 'Submit Report')]").click()
 
 
-def randEmailUser():
-	env = "qa"
-	randUser = "testUser%s" % base_repr(int(time.time()), 36)
-	print(randUser)
-	randEmail = "%s@mailinator.com" % randUser
-	print(randEmail)
-	return randEmail
-
-
 def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	whichEnv = url.split('.')[1]
 
@@ -719,10 +665,12 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 
 	# fill out new All Access member form
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
+	randUser = randUser.replace('-', '')
+	randUser = randUser.replace('+', '')
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("Auth0 V9 Test")
+	browser.find_element_by_id("user_company_name").send_keys("Mailtrap")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 
@@ -767,6 +715,7 @@ def getstartedURL():
 
 def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	randUser = email.split('@')[0]
+	# createNewUserAA_NewOnboarding("https://use1-green-entreleadership-direct-access.test.entreleadership.com/" % ("test"), randUser, email)
 	createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
 	cookieChecker()
 	getstartedURL()
@@ -815,25 +764,23 @@ def cookieChecker():
 # def aaPasswordReset:
 	# https://www.qa.entreleadership.com/users/password/reset
 
+def randEmailUser():
+	randUser = "%s+%s" % (mailservice_email_user, base_repr(int(time.time()), 36).lower())
+	print(randUser)
+	randEmail = "%s@%s" % (randUser, mailservice_domain)
+	print(randEmail)
+	return randEmail
+
 
 # =====================================================================
 
 
 #========================================== main =================================
-# signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4690@mailinator.com", "password" )
-
-# signUpAAuserForWRT("https://weeklyreport.test.entreleadership.com/get-started", "testUser4365@mailinator.com", "password" , False)
-
-# signUpAAuserForWRT("https://weeklyreport.qa.entreleadership.com/get-started", "testUser4067@mailinator.com", "password", False) # testUser8890@mailinator.com
-
-# loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
-# loginAndTestNewOnboarding("qa", "testuserp8612z@mailinator.com", "password", 1)
-
-
 # ***********************************
-# newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
-browser.get ("http://www.qa.entreleadership.com")
-list_all_images_on_page()
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
+# randEmailUser()
+# browser.get ("http://www.qa.entreleadership.com")
+# list_all_images_on_page()
 
 # TEST cookie size
 # ===================================
