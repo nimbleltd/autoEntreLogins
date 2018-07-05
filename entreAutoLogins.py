@@ -23,7 +23,7 @@ from selenium.webdriver.support.ui import Select
 # Standard Libs
 from random import *
 import random
-import subprocess # <-- to get clipboarData
+import subprocess # to get clipboarData
 
 browser = webdriver.Chrome()
 # browser = webdriver.Firefox()
@@ -90,6 +90,8 @@ def list_all_images_on_page():
 
 	# for image in images:
 	print(images.get_attribute('src'))
+
+
 #================================================================================
 def waitUntilExists(locatorType, element):
 	element = "browser.find_element(By.%s, %s)" % (locatorType, element)
@@ -151,9 +153,12 @@ def createNewUserAA(url, randUser, randEmail):
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	else:
-		print("TestEnv = %s \nskipping discount code test" % whichEnv)
-		browser.implicitly_wait(5)
-		time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+		print("TestEnv = %s \nUsing discount code for Test Env" % whichEnv)
+		# browser.implicitly_wait(5)
+		# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+		# browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+		browser.find_element_by_id("coupon_code").send_keys("lapin") # enter discount code value
+		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	
 
@@ -480,6 +485,7 @@ def newDashBoardOnboardingSteps(whichEnv):
 	# Set Up Weekly Report Tool
 	# browser.find_element_by_xpath("//a[contains(text(), 'Set Up Weekly Report Tool')]").click()
 	browser.find_element_by_link_text("Set Up Weekly Report Tool").click()
+	time.sleep(0.2)
 	browser.find_element_by_link_text("Set up the Weekly Report Tool").click()
 
 	# WRT get started
@@ -683,9 +689,12 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	else:
-		print("TestEnv = %s \nskipping discount code test" % whichEnv)
-		browser.implicitly_wait(5)
-		time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+		print("TestEnv = %s \nUsing discount code test" % whichEnv)
+		# browser.implicitly_wait(5)
+		# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
+		# browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+		browser.find_element_by_id("coupon_code").send_keys("lapin") # enter discount code value
+		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	
 
@@ -771,13 +780,32 @@ def randEmailUser():
 	print(randEmail)
 	return randEmail
 
+def testForgotPasswordAA(env, email):
+	browser.implicitly_wait(5)
+	pwdURL = "https://www.%s.entreleadership.com/users/password/reset" % (env)
+	browser.get (pwdURL)
+	browser.find_element_by_xpath("//input[@id='email']").send_keys(email)
+	browser.find_element_by_xpath("//input[@name='commit']").click()
+
+	
+	
+
+
+
+
+
 
 # =====================================================================
 
 
 #========================================== main =================================
+
+# AA forgot password
+# testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
+
 # ***********************************
 newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
+
 # randEmailUser()
 # browser.get ("http://www.qa.entreleadership.com")
 # list_all_images_on_page()
@@ -797,32 +825,12 @@ newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
 	# completeWRTform('previousWeek', memberNum, teamMemberEmail, "qa")
 	# completeWRTform('currentWeek', memberNum, teamMemberEmail, "qa")
 
-
+# LARGE TEAM
 # createNewUserAA("https://www.qa.entreleadership.com", 'testACHSummitPayment', 'testACHSummitPayment@mailinator.com')
 # testUserP8RUYJ@mailinator.com
-
-# loginWeeklyReport('https://weeklyreport.qa.entreleadership.com', 'testUserP95H8I-0@mailinator.com', 'password')
-# time.sleep(3)
-# completeWRTform("previousWeek", 0)
-# time.sleep(0.5)
-# browser.get("https://weeklyreport.qa.entreleadership.com")
-# completeWRTform("currentWeek", 0)
-
-
-# newUserTestNewOnboarding("qa", 'legayusernotonboarded@mailinator.com', "password", 1)
-
-# teamMemberLoginSelectLeader('testUserP8KX4O@mailinator.com', 0, 4, 'password')
-
-# teamMemberLoginSelectLeader('testUserP8IZ7F@mailinator.com', 4, 'password')
 
 # ******   Login and Create new Team Members for Existing Users ****** #
 # loginWRT('testUserP8IZ7F@mailinator.com', 'password', 'qa')
 # inviteWrtTeamMembers('testUserP8IZ7F@mailinator.com', 2, 4)
 # **********************************************************************
 
-# loginWRT('testuserp9743b@mailinator.com', 'password', 'qa')
-# inviteWrtTeamMembers('testuserp9743b@mailinator.com', 45, 47)
-# teamMemberLoginSelectLeader("testUserP9743B@mailinator.com",45, 47, "password", "qa")
-
-# destroy team member test
-# loginWeeklyReport("https://weeklyreport.qa.entreleadership.com/sign-in", "genUser9076@mailinator.com", "password")
