@@ -445,39 +445,28 @@ def newDashBoardOnboardingSteps(whichEnv):
 	# browser.find_element_by_link_text("Join a Mastermind Group").click()
 
 	# Edit profile page https://www.qa.entreleadership.com/mastermind 
-	browser.find_element_by_link_text("Edit My Profile").click()
+	# browser.find_element_by_link_text("Edit My Profile").click()
+	browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
 	
-	# Edit User profile so we can pass MM min signup requirments
-	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
-	select_dropdown_value('user_num_of_employees', '2-10')
-	browser.implicitly_wait(5)
+	# employee count
+	browser.find_element_by_xpath("//div[@id='input-num_of_employees']").click()
 	time.sleep(1)
-	browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
-	# Gross Revenue 
+	browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='2-10']").click()
 	time.sleep(1)
-	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
-	time.sleep(0.5)
-	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
-	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
+	# click next
+	#  estimate revenue
+	browser.find_element_by_xpath("//div[@id='content-gross_revenues']").click()
+	browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='$500,000-$999,999']").click()
+	# click next
+	browser.find_element_by_xpath("//input[@type='submit']").click()
 
-	#  Go to MM
-	time.sleep(5)
-	browser.find_element_by_xpath("//a[contains(text(), 'Mastermind')]").click()
-
-	#  Sign me up for an MM Group
-	time.sleep(5)
-	browser.refresh()
-	# time.sleep(3)
-	# browser.refresh()
-	browser.find_element_by_xpath("//a[contains(text(), 'Sign Me Up for a Group!')]").click()
-	browser.implicitly_wait(5)
-	time.sleep(5)
 	if whichEnv == "qa":
-		browser.find_element_by_id("mastermind-group-92").click() # qa
-	else:
-		browser.find_element_by_id("mastermind-group-133").click() # test
-	browser.find_element_by_xpath("//input[@value='Sign Me Up!']").click()
-	time.sleep(5)
+		# browser.find_element_by_id("mastermind-group-92").click() # qa
+		browser.find_element_by_xpath("//div[@group_id='92']").click()
+	# else:
+	# 	browser.find_element_by_id("mastermind-group-133").click() # test
+
+	browser.find_element_by_xpath("//input[@type='submit']").click()
 
 	#  Go back to dashboard
 	browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
@@ -786,13 +775,6 @@ def testForgotPasswordAA(env, email):
 	browser.get (pwdURL)
 	browser.find_element_by_xpath("//input[@id='email']").send_keys(email)
 	browser.find_element_by_xpath("//input[@name='commit']").click()
-
-	
-	
-
-
-
-
 
 
 # =====================================================================
