@@ -147,10 +147,12 @@ def createNewUserAA(url, randUser, randEmail):
 	browser.find_element_by_name("commit").click() # submit create new user
 
 	if whichEnv == 'qa':
-		print("TestEnv = %s" % whichEnv)
+		print("TestEnv = %s 150" % whichEnv)
 		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
 		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
+		print("line 154")
+		pause()
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	else:
 		print("TestEnv = %s \nUsing discount code for Test Env" % whichEnv)
@@ -665,23 +667,24 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("Mailtrap")
+	browser.find_element_by_id("user_company_name").send_keys("Postgres")
 	browser.find_element_by_name("password").send_keys("password")
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 
 	browser.find_element_by_name("commit").click() # submit create new user
 
 	if whichEnv == 'qa':
-		print("TestEnv = %s" % whichEnv)
+		print("TestEnv = %s 677" % whichEnv)
 		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
 		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
+		print("line 681")
+		time.sleep(1)
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+		pause()
 	else:
+		# apply discount code for Test Env
 		print("TestEnv = %s \nUsing discount code test" % whichEnv)
-		# browser.implicitly_wait(5)
-		# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
-		# browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 		browser.find_element_by_id("coupon_code").send_keys("lapin") # enter discount code value
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
@@ -713,19 +716,53 @@ def getstartedURL():
 
 def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	randUser = email.split('@')[0]
-	# createNewUserAA_NewOnboarding("https://use1-green-entreleadership-direct-access.test.entreleadership.com/" % ("test"), randUser, email)
-	createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
-	cookieChecker()
-	getstartedURL()
-	cookieChecker()
-	newDashBoardOnboardingSteps(env)
-	cookieChecker()
-	inviteWrtTeamMembers(email, start_num, end_num)
-	cookieChecker()
+	try:
+		createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
+	except:
+		print("creating new AA user failed")
+	try:
+		cookieChecker()
+	except:
+		print("cookieCheckerFailed")
+	try:
+		getstartedURL()
+	except:
+		print("failed to click the get started URL")
+	try:
+		cookieChecker()
+	except:
+		print("cookieCheckerFailed")
+	try:
+		newDashBoardOnboardingSteps(env)
+	except:
+		print("new onbaording failed")
+	try:
+		cookieChecker()
+	except:
+		print("cookieCheckerFailed")
+	try:
+		browser.implicitly_wait(35)
+		inviteWrtTeamMembers(email, start_num, end_num)
+	except: 
+		print("failed to invite team mebers to join the company")
+		pause()
+	try:
+		cookieChecker()
+	except:
+		print("cookieCheckerFailed")
 	onbpardFB()
-	cookieChecker()
-	teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
-	cookieChecker()
+	try:
+		cookieChecker()
+	except:
+		print("cookieCheckerFailed")
+	try:
+		teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
+	except:
+		print("onbaord restered WRT users to copmany")
+	try:
+		cookieChecker()
+	except:
+		print("cookieCheckerFailed")
 
 
 def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
@@ -776,7 +813,8 @@ def testForgotPasswordAA(env, email):
 	browser.find_element_by_xpath("//input[@id='email']").send_keys(email)
 	browser.find_element_by_xpath("//input[@name='commit']").click()
 
-
+def pause():
+    programPause = input("Press the <ENTER> key to continue...")
 # =====================================================================
 
 
@@ -787,6 +825,11 @@ def testForgotPasswordAA(env, email):
 
 # ***********************************
 newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
+
+# Only create an AA user
+# randEmail = randEmailUser()
+# randUser = randEmail.split('@')[0]
+# createNewUserAA_NewOnboarding("https://www.qa.entreleadership.com", randUser, randEmail)
 
 # randEmailUser()
 # browser.get ("http://www.qa.entreleadership.com")
