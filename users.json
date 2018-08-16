@@ -51,6 +51,11 @@
     }
 ]
 [
-    {CIP_user:entre-fd6968+pcu3an5@inbox.mailtrap.io},
-    {pwd:paswordQ!1}
+    {QA_CIP_user:entre-fd6968+pcu3an5@inbox.mailtrap.io},
+    {pwd:paswordQ!1},
+    {
+        largerThanTwentyOnTest:entre-fd6968+pcuon0@inbox.mailtrap.io
+    }, 
+    {QA_cip_user:entre-fd6968+pcwjkb@inbox.mailtrap.io},
+    {pwd:passwordQ!1}
 ]

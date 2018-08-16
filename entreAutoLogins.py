@@ -465,8 +465,9 @@ def newDashBoardOnboardingSteps(whichEnv):
 	if whichEnv == "qa":
 		# browser.find_element_by_id("mastermind-group-92").click() # qa
 		browser.find_element_by_xpath("//div[@group_id='92']").click()
-	# else:
-	# 	browser.find_element_by_id("mastermind-group-133").click() # test
+	else:
+		# browser.find_element_by_id("mastermind-group-133").click() # test
+		browser.find_element_by_xpath("//div[@group_id='133']").click()
 
 	browser.find_element_by_xpath("//input[@type='submit']").click()
 
@@ -580,15 +581,15 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		time.sleep(2)
 		browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 		browser.implicitly_wait(15)
-		time.sleep(9)
+		time.sleep(6)
 		# fill out WRT weekly form Previous Week
 		print("signing out")
 		browser.find_element_by_xpath("//a[contains(text(), 'sign out')]").click()
-		# browser.implicitly_wait(15)
+		browser.implicitly_wait(15)
 		time.sleep(5)
 		print("logging back in")
 		loginWeeklyReport('https://weeklyreport.%s.entreleadership.com' % env, teamMemberEmail, 'password')
-		time.sleep(5)
+		time.sleep(4)
 		completeWRTform('previousWeek', memberNum, teamMemberEmail, env)
 		# browser.get("https://weeklyreport.qa.entreleadership.com")
 		completeWRTform('currentWeek', memberNum, teamMemberEmail, env)
@@ -598,18 +599,26 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	time.sleep(1)
 	print("browser refresh y'all")
 	score = [20,40,60,80,100]
-	randScore = random.choice(score)
+	randStressScore = random.choice(score)
+	randMoraleScore = random.choice(score)
+	randWorkloadScore = random.choice(score)
 	if whichWeek == 'previousWeek':
-		week = 'previous -%s' % memberNum
+		print("inside previousWeek")
+		print("whichWeek = %s" % whichWeek)
+		week = 'previous -%s \n\n memberName = %s' % (memberNum, teamMemberEmail)
 		additional = 'nope'
 		dateRange = 'previous'
 	elif whichWeek == "currentWeek":
-		week = 'current -%s' % memberNum
+		print("inside currentWeek")
+		print("whichWeek = %s" % whichWeek)
+		week = 'current -%s \n\n memberName = %s' % (memberNum, teamMemberEmail)
 		additional = 'nada'
 		dateRange = 'current'
 
 	# print variabels
-	print("randScore = %s" % randScore)
+	print("randStressScore = %s" % randStressScore)
+	print("randMoraleScore = %s" % randMoraleScore)
+	print("randWorkloadScore = %s" % randWorkloadScore)
 	print("whichWeek = %s" % whichWeek)
 	# fill out your high for the week
 	# time.sleep(3)
@@ -623,15 +632,15 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	browser.find_element_by_xpath("//textarea[@name='low']").send_keys(week)
 
 	# stress level
-	stressElement = browser.find_element_by_xpath("//input[@name='stress'][@value='%s']" % randScore)
+	stressElement = browser.find_element_by_xpath("//input[@name='stress'][@value='%s']" % randStressScore)
 	browser.execute_script("arguments[0].click();",stressElement)
 
 	# morale level
-	moraleElement = browser.find_element_by_xpath("//input[@name='morale'][@value='%s']" % randScore)
+	moraleElement = browser.find_element_by_xpath("//input[@name='morale'][@value='%s']" % randMoraleScore)
 	browser.execute_script("arguments[0].click();",moraleElement)
 
 	# workload level
-	workloadElement = browser.find_element_by_xpath("//input[@name='workload'][@value='%s']" % randScore)
+	workloadElement = browser.find_element_by_xpath("//input[@name='workload'][@value='%s']" % randWorkloadScore)
 	browser.execute_script("arguments[0].click();",workloadElement)
 
 	# Anything Else
@@ -641,8 +650,10 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	browser.find_element_by_xpath("//div[@value='%s']" % dateRange).click()
 
 	# Submit Report
-	time.sleep(1)
+	time.sleep(0.25)
+	# pause()
 	browser.find_element_by_xpath("//button[contains(text(), 'Submit Report')]").click()
+	time.sleep(1)
 
 
 def createNewUserAA_NewOnboarding(url, randUser, randEmail):
@@ -677,8 +688,8 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 		print("TestEnv = %s 677" % whichEnv)
 		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
 		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+		# browser.find_element_by_id("coupon_code").send_keys("YRSAVE") # enter discount code value
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
-		print("line 681")
 		time.sleep(1)
 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 		# pause()
@@ -770,7 +781,7 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	try:
 		teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
 	except:
-		print("onbaord restered WRT users to copmany")
+		print("self selecting leader or submiting weekly report errored")
 		pause()
 	try:
 		cookieChecker()
@@ -838,7 +849,7 @@ def pause():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,0)
 
 # Only create an AA user
 # randEmail = randEmailUser()
