@@ -546,12 +546,12 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		browser.get("https://weeklyreport.%s.entreleadership.com/sign-out" % env)
 		#  sign in to WRT 
 		loginWeeklyReport('https://weeklyreport.%s.entreleadership.com' % env, teamMemberEmail, 'password')
-		browser.implicitly_wait(15)
+		browser.implicitly_wait(20)
 		time.sleep(8)
 
 		# Select a leader
 		browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
-		time.sleep(1)
+		time.sleep(2)
 		cleanRandUser = randUser.replace('-', '')
 		cleanRandUser = cleanRandUser.replace('+', '')
 		if memberNum == 0:
@@ -567,11 +567,11 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		elif memberNum > 3:
 			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
 		
-		time.sleep(1)
+		time.sleep(2)
 		clickOffSelectLeader = browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
 		action = webdriver.common.action_chains.ActionChains(browser)
-		time.sleep(0.5)
-		action.move_to_element_with_offset(clickOffSelectLeader, 250, 150)
+		time.sleep(1)
+		action.move_to_element_with_offset(clickOffSelectLeader, 350, 350)
 		action.click()
 		try:
 			action.perform()
@@ -685,7 +685,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	browser.find_element_by_name("commit").click() # submit create new user
 
 	if whichEnv == 'qa':
-		print("TestEnv = %s 677" % whichEnv)
+		print("TestEnv = %s" % whichEnv)
 		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
 		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 		# browser.find_element_by_id("coupon_code").send_keys("YRSAVE") # enter discount code value
@@ -849,7 +849,7 @@ def pause():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,0)
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,4)
 
 # Only create an AA user
 # randEmail = randEmailUser()
