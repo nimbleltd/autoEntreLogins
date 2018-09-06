@@ -484,7 +484,8 @@ def newDashBoardOnboardingSteps(whichEnv):
 	browser.find_element_by_link_text("Get Started").click()
 	time.sleep(2)
 	#  Enter job title
-	browser.find_element_by_name("title").send_keys("Nerf Herder")
+	# browser.find_element_by_name("title").send_keys("Nerf Herder")
+	browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
 	browser.implicitly_wait(10)
 	time.sleep(5)
 	browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
@@ -714,6 +715,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	browser.find_element_by_id("input-creditCardCity").send_keys("Nashville")
 	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
 	browser.find_element_by_id("submitButton").click()
+	# pause()
 
 	# initial user login
 	browser.implicitly_wait(35)
@@ -849,7 +851,7 @@ def pause():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,4)
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,0)
 
 # Only create an AA user
 # randEmail = randEmailUser()
