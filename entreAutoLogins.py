@@ -851,7 +851,7 @@ def pause():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,0)
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,1)
 
 # Only create an AA user
 # randEmail = randEmailUser()
