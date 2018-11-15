@@ -9,9 +9,13 @@
     },
     {
         manyWRTusers:genUser7148@mailinator.com
+
     },
     {
         mailtrap.io-user:entre-fd6968@inbox.mailtrap.io
+    },
+    {
+        qa-team-of-4:entre-fd6968+pf9dm4@inbox.mailtrap.io
     }
 ]
 
@@ -57,5 +61,10 @@
         largerThanTwentyOnTest:entre-fd6968+pcuon0@inbox.mailtrap.io
     }, 
     {QA_cip_user:entre-fd6968+pcwjkb@inbox.mailtrap.io},
-    {pwd:passwordQ!1}
+    {pwd:passwordQ!1},
+
+    {QA_cip: entre-fd6968+phxvir@inbox.mailtrap.io, password:Password1!},
+
+    {QA_CIP_inviteCodeTest: entre-fd6968+pi3h6u@inbox.mailtrap.io, password:Password1!,
+    elid: , coid: }
 ]

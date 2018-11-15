@@ -114,133 +114,6 @@ def loginEntre(url, email, pwd):
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_name("commit").click()
 
-# open new tab in Mailinator to watch emails
-# browser.execute_script("window.open('https://www.mailinator.com/v2/inbox.jsp?zone=public&query=%s', 'new_window')" % randUser)
-# browser.switch_to.window(browser.window_handles[0]) #<- switch tabs
-# browser.switch_to.window(browser.window_handles[1])
-# browser.switch_to.window(browser.window_handles[-1])
-
-# def createNewUserAA(url, randUser, randEmail):
-# 	whichEnv = url.split('.')[1]
-
-# 	# root of domain
-# 	browser.get (url)
-	
-# 	# go to allaccess
-# 	browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
-
-# 	browser.find_element_by_partial_link_text("Become").click()
-	
-# 	# go to sign up page for allaccess
-# 	browser.find_element_by_partial_link_text("Become").click()
-
-# 	# fill out new All Access member form
-# 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
-# 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
-# 	browser.find_element_by_id("user_email").send_keys(randEmail)
-# 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-# 	browser.find_element_by_id("user_company_name").send_keys("Fluke Lasers")
-# 	browser.find_element_by_name("password").send_keys("password")
-# 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
-# 	# browser.implicitly_wait(30)
-# 	# time.sleep(3)
-# 	browser.find_element_by_name("commit").click() # submit create new user
-
-# 	if whichEnv == 'qa':
-# 		print("TestEnv = %s 150" % whichEnv)
-# 		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
-# 		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
-# 		browser.find_element_by_id("coupon_submit").click() # apply discount code
-# 		print("line 154")
-# 		pause()
-# 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
-# 	else:
-# 		print("TestEnv = %s \nUsing discount code for Test Env" % whichEnv)
-# 		# browser.implicitly_wait(5)
-# 		# time.sleep(5)   # delays for 5 seconds. You can Also Use Float Value.
-# 		# browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
-# 		browser.find_element_by_id("coupon_code").send_keys("lapin") # enter discount code value
-# 		browser.find_element_by_id("coupon_submit").click() # apply discount code
-# 		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
-	
-
-	
-# 	# payment page
-# 	iframe = browser.find_element_by_id("z_hppm_iframe")
-# 	browser.switch_to.frame(iframe)
-# 	browser.find_element_by_id("input-creditCardNumber").send_keys("5454545454545454")
-# 	select_dropdown_value('input-creditCardExpirationMonth', '03')
-# 	select_dropdown_value('input-creditCardExpirationYear', '2037')
-# 	browser.find_element_by_id("input-cardSecurityCode").send_keys("989")
-# 	select_dropdown_value('input-creditCardState', 'Tennessee')
-# 	browser.find_element_by_id("input-creditCardAddress1").send_keys("123 Test Dr")
-# 	browser.find_element_by_id("input-creditCardCity").send_keys("Nashville")
-# 	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
-# 	browser.find_element_by_id("submitButton").click()
-
-# 	# initial user login
-# 	browser.implicitly_wait(35)
-# 	browser.find_element_by_name("email").send_keys(randEmail)
-# 	browser.find_element_by_name("password").send_keys("password")
-# 	browser.find_element_by_name("commit").click()
-
-# 	# Get-Started
-# 	browser.find_element_by_link_text("Get Started Now").click()
-
-# 	# Onboarding Steps
-# 	# ==========================================================
-# 	# Join Mastermind
-# 	# ================
-# 	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
-# 	print("click mm button")
-# 	time.sleep(1)
-# 	print("sleep before clicking 'join MM bullet link'")
-# 	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
-# 	print("before clicking join MM link to next page")
-# 	browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
-# 	print("after clicking joining MM group link to new page")
-
-# 	# Edit profile page https://www.qa.entreleadership.com/mastermind 
-# 	browser.find_element_by_link_text("Edit My Profile").click()
-
-# 	# Completed your profile
-# 	#Industry
-# 	browser.implicitly_wait(30)
-# 	wait = WebDriverWait(browser, 5)
-# 	# element = wait.until(EC.element_to_be_clickable((By.ID, 'profile-card-field-industry')))
-# 	# print("begun profile")
-
-# 	# Team Size 
-# 	browser.find_element_by_xpath("//div[@id='profile-card-field-num_of_employees']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
-# 	select_dropdown_value('user_num_of_employees', '2-10')
-# 	browser.implicitly_wait(5)
-# 	time.sleep(5)
-# 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-num_of_employees']//button[@type='submit']").click()
-# 	# Gross Revenue 
-# 	browser.find_element_by_xpath("//div[@id='profile-card-field-gross_revenues']//i[@class='fa fa-plus profile-card-field-icon plus']").click()	
-# 	select_dropdown_value('user_gross_revenues', '$500,000-$999,999')
-# 	browser.find_element_by_xpath("//div[@id='profile-card-field-form-gross_revenues']//button[@type='submit']").click()
-	
-# 	# # Go to the Next Page
-# 	# browser.implicitly_wait(5)
-# 	# time.sleep(9)
-# 	# browser.find_element_by_xpath("//button[@data-event='completed_profile_setup']").click()
-
-# 	# Choose Friday 10am MM Group
-# 	browser.implicitly_wait(5)
-# 	time.sleep(5)
-# 	if whichEnv == "qa":
-# 		browser.find_element_by_id("mastermind-group-92").click() # qa
-# 	else:
-# 		browser.find_element_by_id("mastermind-group-133").click() # test
-# 	browser.find_element_by_xpath("//button[@data-target='3']").click()
-
-# 	# Get Started: https://www.qa.entreleadership.com/get-started?step=validate_sync_ecoaching
-# 	browser.implicitly_wait(5)
-# 	time.sleep(8)
-# 	# browser.find_element_by_link_text("Get Started").click()
-# 	browser.find_element_by_xpath("//a[@data-event='completed_ecoaching_sync']").click()
-
 def select_dropdown_value(id, value):
 	selectOption = Select(browser.find_element_by_id(id))
 	option_selected = selectOption.select_by_value(value)
@@ -479,6 +352,8 @@ def newDashBoardOnboardingSteps(whichEnv):
 	browser.find_element_by_link_text("Set Up Weekly Report Tool").click()
 	time.sleep(0.2)
 	browser.find_element_by_link_text("Set up the Weekly Report Tool").click()
+	time.sleep(1)
+	browser.switch_to.window(browser.window_handles[1])
 
 	# WRT get started
 	browser.find_element_by_link_text("Get Started").click()
@@ -561,6 +436,8 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 			browser.find_element_by_xpath("//span[@name='fName %s-0']" % randUser).click()
 		elif memberNum == 2:
 			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
+			time.sleep(0.5 )
+			browser.find_element_by_xpath("//span[@name='fName %s-0']" % randUser).click()
 		elif memberNum == 3:
 			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
 			time.sleep(0.5 )
@@ -657,11 +534,12 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	time.sleep(1)
 
 
-def createNewUserAA_NewOnboarding(url, randUser, randEmail):
+def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
 	whichEnv = url.split('.')[1]
 
 	# root of domain
 	browser.get (url)
+	# pause()
 	
 	# go to allaccess
 	browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
@@ -680,28 +558,26 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
 	browser.find_element_by_id("user_company_name").send_keys("Mailtrap")
-	browser.find_element_by_name("password").send_keys("password")
+	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 
 	browser.find_element_by_name("commit").click() # submit create new user
 
 	if whichEnv == 'qa':
 		print("TestEnv = %s" % whichEnv)
-		# apply discount code before entering payment https://www.qa.entreleadership.com/pay
-		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
-		# browser.find_element_by_id("coupon_code").send_keys("YRSAVE") # enter discount code value
+		browser.find_element_by_id("coupon_code").send_keys("REACTIVATE") # enter discount code value
+		# browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+		# pause()
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		time.sleep(1)
-		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
-		# pause()
+
 	else:
-		# apply discount code for Test Env
 		print("TestEnv = %s \nUsing discount code test" % whichEnv)
 		browser.find_element_by_id("coupon_code").send_keys("lapin") # enter discount code value
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
-		browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
 	
-
+	browser.find_element_by_xpath("//input[@value='Next Page']").click() # submit
+	# pause()
 	
 	# payment page
 	iframe = browser.find_element_by_id("z_hppm_iframe")
@@ -720,17 +596,19 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail):
 	# initial user login
 	browser.implicitly_wait(35)
 	browser.find_element_by_name("email").send_keys(randEmail)
-	browser.find_element_by_name("password").send_keys("password")
+	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_name("commit").click()
+	# pause()
 
 def getstartedURL():
 	browser.find_element_by_link_text("Get Started Now").click()
+	# pause()
 
 
 def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	randUser = email.split('@')[0]
 	try:
-		createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email)
+		createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email, pwd)
 	except:
 		print("creating new AA user failed")
 		pause()
@@ -751,6 +629,7 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 		pause()
 	try:
 		newDashBoardOnboardingSteps(env)
+		# pause()
 	except:
 		print("new onbaording failed")
 		pause()
@@ -805,7 +684,6 @@ def cookieChecker():
 	cookieSizeTopThreshold = 1550
 	cookies_list = browser.get_cookies()
 	cookies_dict = {}
-	# print("\nShowing cookieSizes > %s:" %  cookieSizeShowThreshold)
 	for cookie in cookies_list:
 		cookies_dict[cookie['name']] = cookie['value']
 	for each in cookies_dict:
@@ -816,15 +694,6 @@ def cookieChecker():
 			print("\nWARNING exceeding cookieSizeWarningThreshold of %s: \n    ==========================================\n    cookieSize: %s  CookieName: %s\n    ==========================================\n" % (cookieSizeWarningThreshold, cookieSize, each))
 		elif cookieSize >= cookieSizeTopThreshold:
 			print("\nHOUSTON WE HAVE A PROBLEM we are exceeding cookieSizeTopThreshold of %s: \n    ==========================================\n    cookieSize: %s  CookieName: %s\n    ==========================================\n" % (cookieSizeTopThreshold, cookieSize, each))
-
-# def wrtPasswordReset:
-	# create a permanent wrtPasswordResetUser
-	# https://weeklyreport.entreleadership.com/forgot-password
-	# https://weeklyreport.entreleadership.com/account/5b17f15155f2302168fefeec/reset-password
-	# https://weeklyreport.entreleadership.com/account/<Auth0 ID>/reset-password
-
-# def aaPasswordReset:
-	# https://www.qa.entreleadership.com/users/password/reset
 
 def randEmailUser():
 	randUser = "%s+%s" % (mailservice_email_user, base_repr(int(time.time()), 36).lower())
