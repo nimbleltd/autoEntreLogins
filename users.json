@@ -66,5 +66,124 @@
     {QA_cip: entre-fd6968+phxvir@inbox.mailtrap.io, password:Password1!},
 
     {QA_CIP_inviteCodeTest: entre-fd6968+pi3h6u@inbox.mailtrap.io, password:Password1!,
-    elid: , coid: }
+    elid: , coid: },
+    {
+        QA_CIP_Leader:entre-fd6968+pit5ug@inbox.mailtrap.io, 
+        password:Password1!, 
+        company_name:Link-Controller-Test, 
+        company_invite_link:https://weeklyreport2.qa.entreleadership.com/invites?invite_code=bGVhZGVyX2lkPUVMSURQVzhJWFZVTUJDMEMmd29ya3NfZm9yX2lkPUNPSURG%250AM0VDUUlOSg%253D%253D%250A
+        coid: ,
+        elid: 
+    },
+    {
+        team_member ^:entre-fd6968+piuxlg@inbox.mailtrap.io,
+        password:Password1!,
+        first:Mike,
+        last:Paxon,
+        title:Coach
+    },
+    {
+        team_member ^:entre-fd6968+piuy9d@inbox.mailtrap.io,
+        password:Password1!,
+        first:Gary,
+        last:Carter,
+        title:Catcher
+    },
+    {
+        team_member ^:entre-fd6968+piuyop@inbox.mailtrap.io,
+        password:Password1!,
+        first:Mike,
+        last:Ditka,
+        title:Coach,
+    },
+    {
+        team_member ^:entre-fd6968+piwv7g@inbox.mailtrap.io,
+        password:Password1!,
+        first:Tom,
+        last:Landry,
+        title:Coach,
+    },
+    {
+        entre-fd6968+matchingFnameAndLname-0@inbox.mailtrap.io
+        Fname
+        Lname
+
+        entre-fd6968+matchingFnameAndLname-1@inbox.mailtrap.io
+        Fname
+        Lname
+
+        entre-fd6968+matchingFnameAndLname-2@inbox.mailtrap.io
+        Fname
+        Lname
+
+    }
 ]
+
+NEW QA team for testing
+
+Leader
+entre-fd6968+plqxwq@inbox.mailtrap.io
+
+Comany name
+Thai Tanic
+
+member
+entre-fd6968+plr08y@inbox.mailtrap.io
+
+
+Another NEW QA team for testing
+
+Leader
+entre-fd6968+plr4xo@inbox.mailtrap.io
+
+Comany name
+Feel like Crepe
+
+member
+entre-fd6968+plr52l@inbox.mailtrap.io
+=========================================
+
+Another Another NEW QA team for testing
+
+Leader
+entre-fd6968+plr60i@inbox.mailtrap.io
+
+Comany name
+Wills Owed
+
+member
+entre-fd6968+plr60p@inbox.mailtrap.io
+member
+entre-fd6968+plupz6@inbox.mailtrap.io, Dread Pirate Roberts
+invite code:
+https://weeklyreport2.qa.entreleadership.com/team_member_sign_ups?invite_code=bGVhZGVyX2lkPUVMSUQzNVAwNTk0QUtHOEEmd29ya3NfZm9yX2lkPUNPSUQx%250AMzA1TlJLRjZYVlg%253D%250A
+        member
+        entre-fd6968+pluquf@inbox.mailtrap.io
+        invite code: https://weeklyreport2.qa.entreleadership.com/invites?invite_code=bGVhZGVyX2lkPUVMSURKSVdTMEVRMUNBODUmd29ya3NfZm9yX2lkPUNPSUQx%250AMzA1TlJLRjZYVlg%253D%250A
+
+        ^ member: entre-fd6968+pmxn50@inbox.mailtrap.io
+
+
+QA WRT 2.0
+
+entre-fd6968+pmkngh@inbox.mailtrap.io  - owner Texas Rangers
+^
+entre-fd6968+pmknls@inbox.mailtrap.io - team Member of Rangers
+
+entre-fd6968+pmkob9@inbox.mailtrap.io ^
+
+EMAIL VERIFICATION
+==================
+Owner: entre-fd6968+pn8qh8@inbox.mailtrap.io
+Company Name: Umbro
+link: https://weeklyreport2.qa.entreleadership.com/invites?invite_code=bGVhZGVyX2lkPUVMSUQxUTBWVE9XOE9LM1Imd29ya3NfZm9yX2lkPUNPSURF%250AVTUwU1lKREhRWFE%253D%250A
+
+First Team Member:
+entre-fd6968+pn8qng@inbox.mailtrap.io
+
+SEcond Member:
+Kevin De Bruyne
+
+third: entre-fd6968+pn8r23@inbox.mailtrap.io
+
+frouth: entre-fd6968+pn8r23DirectLink@inbox.mailtrap.io

@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# filetypes to ignore
+*.png
+magnoliaScreenShots/
+.DS_Store
+
 # Creds Required by autoEntreLogin but must stay out of repo
 creds.py
 auth0_creds.py

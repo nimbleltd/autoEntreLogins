@@ -5,6 +5,7 @@ import sys
 import time
 import datetime
 from numpy import base_repr
+from PIL import Image
 
 #Argparse
 import argparse
@@ -26,7 +27,7 @@ import random
 import subprocess # to get clipboarData
 
 browser = webdriver.Chrome()
-# browser = webdriver.Firefox()
+# browser = webdriver.Firefox(executable_path = '/usr/local/bin/geckodriver')
 # browser = webdriver.Safari()
 
 # Args
@@ -311,42 +312,43 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 # ===================================================
 
 def newDashBoardOnboardingSteps(whichEnv):
-	print("sleep before clicking 'join MM bullet link'")
-	# browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
-	print("before clicking join MM link to next page")
-	browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
-	# browser.find_element_by_partial_link_text("Join a Mastermind Group").click()
-	print("after clicking joining MM group link to new page")
-	# browser.find_element_by_link_text("Join a Mastermind Group").click()
+	# print("sleep before clicking 'join MM bullet link'")
+	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
+	# print("before clicking join MM link to next page")
+	# browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
+	# # browser.find_element_by_partial_link_text("Join a Mastermind Group").click()
+	# print("after clicking joining MM group link to new page")
+	# # browser.find_element_by_link_text("Join a Mastermind Group").click()
 
-	# Edit profile page https://www.qa.entreleadership.com/mastermind 
-	# browser.find_element_by_link_text("Edit My Profile").click()
-	browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
+	# # Edit profile page https://www.qa.entreleadership.com/mastermind 
+	# # browser.find_element_by_link_text("Edit My Profile").click()
+	# browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
 	
-	# employee count
-	browser.find_element_by_xpath("//div[@id='input-num_of_employees']").click()
-	time.sleep(1)
-	browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='2-10']").click()
-	time.sleep(1)
-	# click next
-	#  estimate revenue
-	browser.find_element_by_xpath("//div[@id='content-gross_revenues']").click()
-	browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='$500,000-$999,999']").click()
-	# click next
-	browser.find_element_by_xpath("//input[@type='submit']").click()
+	# # employee count
+	# browser.find_element_by_xpath("//div[@id='input-num_of_employees']").click()
+	# time.sleep(1)
+	# browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='2-10']").click()
+	# time.sleep(1)
+	# # click next
+	# #  estimate revenue
+	# browser.find_element_by_xpath("//div[@id='content-gross_revenues']").click()
+	# browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='$500,000-$999,999']").click()
+	# # click next
+	# browser.find_element_by_xpath("//input[@type='submit']").click()
 
-	if whichEnv == "qa":
-		# browser.find_element_by_id("mastermind-group-92").click() # qa
-		browser.find_element_by_xpath("//div[@group_id='92']").click()
-	else:
-		# browser.find_element_by_id("mastermind-group-133").click() # test
-		browser.find_element_by_xpath("//div[@group_id='133']").click()
+	# if whichEnv == "qa":
+	# 	# browser.find_element_by_id("mastermind-group-92").click() # qa
+	# 	browser.find_element_by_xpath("//div[@group_id='92']").click()
+	# else:
+	# 	# browser.find_element_by_id("mastermind-group-133").click() # test
+	# 	browser.find_element_by_xpath("//div[@group_id='133']").click()
 
-	browser.find_element_by_xpath("//input[@type='submit']").click()
+	# browser.find_element_by_xpath("//input[@type='submit']").click()
 
-	#  Go back to dashboard
-	browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
-
+	# #  Go back to dashboard
+	# browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
+	
+	# pause()
 	# Set Up Weekly Report Tool
 	# browser.find_element_by_xpath("//a[contains(text(), 'Set Up Weekly Report Tool')]").click()
 	browser.find_element_by_link_text("Set Up Weekly Report Tool").click()
@@ -417,7 +419,7 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		randUser = email.split('@')[0]
 		teamMemberEmail = "%s-%s@%s" % (randUser, memberNum, mailservice_domain)
 		# browser.get("https://weeklyreport.qa.entreleadership.com/sign-in")
-		time.sleep(0.5)
+		time.sleep(1)
 		# Sign out of Owner Account
 		browser.get("https://weeklyreport.%s.entreleadership.com/sign-out" % env)
 		#  sign in to WRT 
@@ -449,7 +451,7 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		clickOffSelectLeader = browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
 		action = webdriver.common.action_chains.ActionChains(browser)
 		time.sleep(1)
-		action.move_to_element_with_offset(clickOffSelectLeader, 350, 350)
+		action.move_to_element_with_offset(clickOffSelectLeader, 3050, 3050)
 		action.click()
 		try:
 			action.perform()
@@ -499,7 +501,7 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	print("randWorkloadScore = %s" % randWorkloadScore)
 	print("whichWeek = %s" % whichWeek)
 	# fill out your high for the week
-	# time.sleep(3)
+	time.sleep(3)
 	print("go to wrt form page")
 	browser.get ("https://weeklyreport.%s.entreleadership.com" % env)
 	# browser.find_element_by_name("high").click()
@@ -548,7 +550,12 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
 	browser.find_element_by_xpath("//a[@class='HeroButter-cta btn-primary btn-yellow']").click()
 
 	# go to sign up page for allaccess
-	browser.find_element_by_partial_link_text("Become").click()
+	# browser.find_element_by_partial_link_text("Become").click()
+	browser.find_element_by_xpath("//a[contains(text(), 'Get Coaching')]").click()
+	# if whichEnv == 'qa':
+	# 	browser.get("https://www.qa.entreleadership.com/users/sign_up?acct_type=all_access")
+	# else: 
+	# 	browser.get("https://www.test.entreleadership.com/users/sign_up?acct_type=all_access")
 
 	# fill out new All Access member form
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
@@ -560,13 +567,14 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
 	browser.find_element_by_id("user_company_name").send_keys("Mailtrap")
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
-
+	# screenShot()
 	browser.find_element_by_name("commit").click() # submit create new user
+	# pause()
 
 	if whichEnv == 'qa':
 		print("TestEnv = %s" % whichEnv)
-		browser.find_element_by_id("coupon_code").send_keys("REACTIVATE") # enter discount code value
-		# browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+		# browser.find_element_by_id("coupon_code").send_keys("REACTIVATE") # enter discount code value
+		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 		# pause()
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		time.sleep(1)
@@ -583,6 +591,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
 	iframe = browser.find_element_by_id("z_hppm_iframe")
 	browser.switch_to.frame(iframe)
 	browser.find_element_by_id("input-creditCardNumber").send_keys("5454545454545454")
+	# browser.find_element_by_id("input-creditCardNumber").send_keys("4470330769941000")
 	select_dropdown_value('input-creditCardExpirationMonth', '03')
 	select_dropdown_value('input-creditCardExpirationYear', '2037')
 	browser.find_element_by_id("input-cardSecurityCode").send_keys("989")
@@ -590,6 +599,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
 	browser.find_element_by_id("input-creditCardAddress1").send_keys("123 Test Dr")
 	browser.find_element_by_id("input-creditCardCity").send_keys("Nashville")
 	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
+	# screenShot()
 	browser.find_element_by_id("submitButton").click()
 	# pause()
 
@@ -612,63 +622,76 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
 	except:
 		print("creating new AA user failed")
 		pause()
+		browser.quit()
 	try:
 		cookieChecker()
 	except:
 		print("cookieCheckerFailed")
 		pause()
+		browser.quit()
 	try:
 		getstartedURL()
 	except:
 		print("failed to click the get started URL")
 		pause()
+		browser.quit()
 	try:
 		cookieChecker()
 	except:
 		print("cookieCheckerFailed")
 		pause()
+		browser.quit()
 	try:
-		newDashBoardOnboardingSteps(env)
 		# pause()
+		newDashBoardOnboardingSteps(env)
 	except:
 		print("new onbaording failed")
 		pause()
+		browser.quit()
 	try:
 		cookieChecker()
 	except:
 		print("cookieCheckerFailed")
 		pause()
+		browser.quit()
 	try:
 		browser.implicitly_wait(35)
 		inviteWrtTeamMembers(email, start_num, end_num)
 	except: 
 		print("failed to invite team mebers to join the company")
 		pause()
+		browser.quit()
 	try:
 		cookieChecker()
 	except:
 		print("cookieCheckerFailed")
 		pause()
+		browser.quit()
 	try:
 		onboardFB()
 	except:
 		print("FB onboard failed")
 		pause()
+		browser.quit()
 	try:
 		cookieChecker()
 	except:
 		print("cookieCheckerFailed")
 		pause()
+		browser.quit()
 	try:
 		teamMemberLoginSelectLeader(email, start_num, end_num, "password", env)
 	except:
 		print("self selecting leader or submiting weekly report errored")
 		pause()
+		browser.quit()
 	try:
 		cookieChecker()
+		# print("killing browser")
 	except:
 		print("cookieCheckerFailed")
 		pause()
+		browser.quit()
 
 
 def loginAndTestNewOnboarding(env, email, pwd, num_users_to_create):
@@ -711,6 +734,12 @@ def testForgotPasswordAA(env, email):
 
 def pause():
     programPause = input("Press the <ENTER> key to continue...")
+
+def screenShot():
+	whatTimeIsIt = datetime.datetime.now().strftime('%b-%d_%I-%M-%S')
+	print("time = %s" % whatTimeIsIt)
+	browser.get_screenshot_as_file("/shots/screenShots.%s.png" % whatTimeIsIt)
+	print("after screenShot")
 # =====================================================================
 
 
@@ -720,7 +749,7 @@ def pause():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,1)
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
 
 # Only create an AA user
 # randEmail = randEmailUser()
