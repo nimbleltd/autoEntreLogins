@@ -536,7 +536,7 @@ def completeWRTform(whichWeek, memberNum, teamMemberEmail, env):
 	time.sleep(1)
 
 
-def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
+def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd, term):
 	whichEnv = url.split('.')[1]
 
 	# root of domain
@@ -573,8 +573,14 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd):
 
 	if whichEnv == 'qa':
 		print("TestEnv = %s" % whichEnv)
+		if term == "annual":
+			browser.find_element_by_xpath("//input[@id='term_yearly']").click()
+			browser.find_element_by_id("coupon_code").send_keys("YRSAVE") # enter discount code value
+		elif term == "monthly":
+			browser.find_element_by_xpath("//input[@id='term_monthly']").click()
+			browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 		# browser.find_element_by_id("coupon_code").send_keys("REACTIVATE") # enter discount code value
-		browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
+		# browser.find_element_by_id("coupon_code").send_keys("321") # enter discount code value
 		# pause()
 		browser.find_element_by_id("coupon_submit").click() # apply discount code
 		time.sleep(1)
@@ -615,10 +621,10 @@ def getstartedURL():
 	# pause()
 
 
-def newUserTestNewOnboarding(env, email, pwd, start_num, end_num):
+def newUserTestNewOnboarding(env, email, pwd, start_num, end_num, term):
 	randUser = email.split('@')[0]
 	try:
-		createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email, pwd)
+		createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email, pwd, term)
 	except:
 		print("creating new AA user failed")
 		pause()
@@ -720,6 +726,7 @@ def cookieChecker():
 
 def randEmailUser():
 	randUser = "%s+%s" % (mailservice_email_user, base_repr(int(time.time()), 36).lower())
+	# randUser = "%s+%s" % (mailservice_email_user, "AA-user-w-payment")
 	print(randUser)
 	randEmail = "%s@%s" % (randUser, mailservice_domain)
 	print(randEmail)
@@ -749,38 +756,5 @@ def screenShot():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3)
-
-# Only create an AA user
-# randEmail = randEmailUser()
-# randUser = randEmail.split('@')[0]
-# createNewUserAA_NewOnboarding("https://www.qa.entreleadership.com", randUser, randEmail)
-
-# randEmailUser()
-# browser.get ("http://www.qa.entreleadership.com")
-# list_all_images_on_page()
-
-# TEST cookie size
-# ===================================
-# loginWRT("genUser2317@mailinator.com", "password", "qa")
-# time.sleep(0.5)
-# cookieChecker()
-
-# teamMemberLoginSelectLeader('testUserP96MPA@mailinator.com', 0, 1, 'password')
-
-# Create additional users for team and submit wrts
-# for memberNum in range (22, 30):
-	# teamMemberEmail = "testuserp9743b-%s@mailinator.com" % memberNum
-# teamMemberLoginSelectLeader("testUserP9AIIB@mailinator.com", 0, 4, "password", "qa")
-	# completeWRTform('previousWeek', memberNum, teamMemberEmail, "qa")
-	# completeWRTform('currentWeek', memberNum, teamMemberEmail, "qa")
-
-# LARGE TEAM
-# createNewUserAA("https://www.qa.entreleadership.com", 'testACHSummitPayment', 'testACHSummitPayment@mailinator.com')
-# testUserP8RUYJ@mailinator.com
-
-# ******   Login and Create new Team Members for Existing Users ****** #
-# loginWRT('testUserP8IZ7F@mailinator.com', 'password', 'qa')
-# inviteWrtTeamMembers('testUserP8IZ7F@mailinator.com', 2, 4)
-# **********************************************************************
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,0, "annual")
 
