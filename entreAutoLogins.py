@@ -165,7 +165,7 @@ def signUpAAuserForWRT(url, email, password, firstLogin, am_i_signed_in, num_use
 			# Continue Sign-up
 			browser.find_element_by_name("title").send_keys("Nerf Herder")
 			browser.implicitly_wait(10)
-			time.sleep(5)
+			time.sleep(0.5)
 			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 		except Exception:
 			print("Not my first login")
@@ -403,7 +403,7 @@ def inviteWrtTeamMembers(email, start_num, end_num):
 			browser.find_element_by_xpath("//input[@name='password']").send_keys("password")
 			browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 			browser.implicitly_wait(20)
-			time.sleep(10)
+			time.sleep(2)
 			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
 			browser.find_element_by_xpath("//div[@id='addeventatc1']").click()
 		except:
@@ -425,7 +425,7 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 		#  sign in to WRT 
 		loginWeeklyReport('https://weeklyreport.%s.entreleadership.com' % env, teamMemberEmail, 'password')
 		browser.implicitly_wait(20)
-		time.sleep(8)
+		time.sleep(2)
 
 		# Select a leader
 		browser.find_element_by_xpath("//div[@style='cursor: pointer; height: 100%; position: relative; width: 100%;']").click()
@@ -448,16 +448,8 @@ def teamMemberLoginSelectLeader(email, num_start, num_end, password, env):
 			browser.find_element_by_xpath("//span[@name='fName %s-1']" % randUser).click()
 		
 		time.sleep(2)
-		clickOffSelectLeader = browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
-		action = webdriver.common.action_chains.ActionChains(browser)
-		time.sleep(1)
-		action.move_to_element_with_offset(clickOffSelectLeader, 3050, 3050)
-		action.click()
-		try:
-			action.perform()
-		except:
-			print("she broke")
-		# browser.find_element_by_xpath("//div[@style='position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 2000;']").click()
+		webdriver.ActionChains(browser).send_keys(Keys.ESCAPE).perform()
+		print("after pressing the escape key")
 		time.sleep(2)
 		browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
 		browser.implicitly_wait(15)
@@ -551,7 +543,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd, term):
 
 	# go to sign up page for allaccess
 	# browser.find_element_by_partial_link_text("Become").click()
-	browser.find_element_by_xpath("//a[contains(text(), 'Get Coaching')]").click()
+	browser.find_element_by_xpath("//a[contains(text(), 'Become a Member')]").click()
 	# if whichEnv == 'qa':
 	# 	browser.get("https://www.qa.entreleadership.com/users/sign_up?acct_type=all_access")
 	# else: 
@@ -564,7 +556,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd, term):
 	browser.find_element_by_id("user_last_name").send_keys("%s" % randUser)
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
-	browser.find_element_by_id("user_company_name").send_keys("Mailtrap")
+	browser.find_element_by_id("user_company_name").send_keys("King of The Nerds")
 	browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# screenShot()
@@ -756,5 +748,5 @@ def screenShot():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,0, "annual")
+newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3, "annual")
 
