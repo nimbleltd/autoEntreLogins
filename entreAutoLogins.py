@@ -312,63 +312,24 @@ def createUserByCompanyLink(companyURL, num_users_to_create):
 # ===================================================
 
 def newDashBoardOnboardingSteps(whichEnv):
-	# print("sleep before clicking 'join MM bullet link'")
 	browser.find_element_by_xpath("//span[@class='GetStarted-title']").click()
-	# print("before clicking join MM link to next page")
-	# browser.find_element_by_xpath("//a[contains(text(), 'Join a Mastermind Group')]").click()
-	# # browser.find_element_by_partial_link_text("Join a Mastermind Group").click()
-	# print("after clicking joining MM group link to new page")
-	# # browser.find_element_by_link_text("Join a Mastermind Group").click()
-
-	# # Edit profile page https://www.qa.entreleadership.com/mastermind 
-	# # browser.find_element_by_link_text("Edit My Profile").click()
-	# browser.find_element_by_xpath("//a[contains(text(), 'Get Started')]").click()
-	
-	# # employee count
-	# browser.find_element_by_xpath("//div[@id='input-num_of_employees']").click()
-	# time.sleep(1)
-	# browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='2-10']").click()
-	# time.sleep(1)
-	# # click next
-	# #  estimate revenue
-	# browser.find_element_by_xpath("//div[@id='content-gross_revenues']").click()
-	# browser.find_element_by_xpath("//ul[@class='select-list select-list-active']//li[@data='$500,000-$999,999']").click()
-	# # click next
-	# browser.find_element_by_xpath("//input[@type='submit']").click()
-
-	# if whichEnv == "qa":
-	# 	# browser.find_element_by_id("mastermind-group-92").click() # qa
-	# 	browser.find_element_by_xpath("//div[@group_id='92']").click()
-	# else:
-	# 	# browser.find_element_by_id("mastermind-group-133").click() # test
-	# 	browser.find_element_by_xpath("//div[@group_id='133']").click()
-
-	# browser.find_element_by_xpath("//input[@type='submit']").click()
-
-	# #  Go back to dashboard
-	# browser.find_element_by_xpath("//a[contains(text(), 'Dashboard')]").click()
-	
-	# pause()
-	# Set Up Weekly Report Tool
-	# browser.find_element_by_xpath("//a[contains(text(), 'Set Up Weekly Report Tool')]").click()
 	browser.find_element_by_link_text("Set Up Weekly Report Tool").click()
 	time.sleep(0.2)
 	browser.find_element_by_link_text("Set up the Weekly Report Tool").click()
 	time.sleep(1)
-	browser.switch_to.window(browser.window_handles[1])
+	browser.switch_to.window(browser.window_handles[3])
 
-	# WRT get started
-	browser.find_element_by_link_text("Get Started").click()
-	time.sleep(2)
-	#  Enter job title
-	# browser.find_element_by_name("title").send_keys("Nerf Herder")
-	browser.find_element_by_xpath("//input[@name='title']").send_keys("Nerf Herder")
-	browser.implicitly_wait(10)
-	time.sleep(5)
-	browser.find_element_by_xpath("//button[contains(text(), 'Continue')]").click()
+	# Sign Up for WRT
+	print("before clicking sign up")
+	browser.find_element_by_xpath("//a[contains(text(), 'Sign Up')]").click()
+	print("after clicking sign up")
 
-	
-
+	# Fill out /company/sign-ups page
+	browser.find_element_by_xpath("//input[@id='company_sign_up_company_name']").send_keys("Dance Gavin Dance")
+	browser.find_element_by_xpath("//input[@id='company_sign_up_first_name']").send_keys("myNameIs")
+	browser.find_element_by_xpath("//input[@id='company_sign_up_last_name']").send_keys("NF")
+	browser.find_element_by_xpath("//input[@id='company_sign_up_title']").send_keys("Nerf Herder")
+	browser.find_element_by_xpath("//input[@id='SignUp-submitBtn']").click()
 
 def onboardFB():
 	# # signup for Facebook
@@ -538,16 +499,10 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd, term):
 	# go to allaccess
 	browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
 	browser.implicitly_wait(3)
-	# browser.find_element_by_partial_link_text("Become").click()
 	browser.find_element_by_xpath("//a[@class='HeroButter-cta btn-primary btn-yellow']").click()
 
 	# go to sign up page for allaccess
-	# browser.find_element_by_partial_link_text("Become").click()
 	browser.find_element_by_xpath("//a[contains(text(), 'Become a Member')]").click()
-	# if whichEnv == 'qa':
-	# 	browser.get("https://www.qa.entreleadership.com/users/sign_up?acct_type=all_access")
-	# else: 
-	# 	browser.get("https://www.test.entreleadership.com/users/sign_up?acct_type=all_access")
 
 	# fill out new All Access member form
 	browser.find_element_by_id("user_first_name").send_keys("testFirstName")
@@ -557,7 +512,7 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd, term):
 	browser.find_element_by_id("user_email").send_keys(randEmail)
 	browser.find_element_by_id("user_phone_number").send_keys("6155551234")
 	browser.find_element_by_id("user_company_name").send_keys("King of The Nerds")
-	browser.find_element_by_name("password").send_keys(pwd)
+	# browser.find_element_by_name("password").send_keys(pwd)
 	browser.find_element_by_id("user_agreed_to_tos").click() # agree to terms checkbox
 	# screenShot()
 	browser.find_element_by_name("commit").click() # submit create new user
@@ -597,16 +552,35 @@ def createNewUserAA_NewOnboarding(url, randUser, randEmail, pwd, term):
 	browser.find_element_by_id("input-creditCardAddress1").send_keys("123 Test Dr")
 	browser.find_element_by_id("input-creditCardCity").send_keys("Nashville")
 	browser.find_element_by_id("input-creditCardPostalCode").send_keys("37214")
-	# screenShot()
 	browser.find_element_by_id("submitButton").click()
-	# pause()
 
 	# initial user login
 	browser.implicitly_wait(35)
-	browser.find_element_by_name("email").send_keys(randEmail)
-	browser.find_element_by_name("password").send_keys(pwd)
-	browser.find_element_by_name("commit").click()
-	# pause()
+	# browser.find_element_by_name("email").send_keys(randEmail)
+	browser.find_element_by_xpath("//input[@type='password']").send_keys(pwd)
+	browser.find_element_by_xpath("//button[@type='submit']").click()
+
+def verifyEmailAddress(email):
+	# Login to mailtrap.io
+	browser.execute_script("window.open('%s', 'tab%s')" % ("https://mailtrap.io/inboxes/397636/messages", (0)))
+	browser.switch_to.window('tab%s' % (0))
+	browser.find_element_by_id("user_email").send_keys("paul.campbell@daveramsey.com")
+	browser.find_element_by_id("user_password").send_keys("Tommyboy2!")
+	browser.find_element_by_xpath("//input[@type='submit']").click()
+	# Open up email
+	time.sleep(4)
+	browser.refresh()
+	time.sleep(2)
+	browser.find_element_by_xpath("//span[contains(text(), '%s')]" % (email)).click()
+	# Move inside iframe
+	browser.switch_to.frame(browser.find_element_by_tag_name("iframe"))
+	time.sleep(2)
+	browser.find_element_by_xpath("//a[contains(text(), 'Verify Email')]").click()
+	# Click Continue
+	# browser.switch_to_window(main_window)
+	# browser.find_element_by_tag_name('body').send_keys(Keys.CONTROL + Keys.TAB)
+	browser.switch_to.window(browser.window_handles[2])
+	browser.find_element_by_xpath("//a[contains(text(), 'Continue')]").click()
 
 def getstartedURL():
 	browser.find_element_by_link_text("Get Started Now").click()
@@ -619,6 +593,12 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num, term):
 		createNewUserAA_NewOnboarding("https://www.%s.entreleadership.com" % (env), randUser, email, pwd, term)
 	except:
 		print("creating new AA user failed")
+		pause()
+		browser.quit()
+	try:
+		verifyEmailAddress(email)
+	except:
+		print("verifying email failed")
 		pause()
 		browser.quit()
 	try:
@@ -640,7 +620,6 @@ def newUserTestNewOnboarding(env, email, pwd, start_num, end_num, term):
 		pause()
 		browser.quit()
 	try:
-		# pause()
 		newDashBoardOnboardingSteps(env)
 	except:
 		print("new onbaording failed")
@@ -748,5 +727,5 @@ def screenShot():
 # testForgotPasswordAA ("qa", "entre-fd6968@inbox.mailtrap.io")
 
 # ***********************************
-newUserTestNewOnboarding("qa", randEmailUser(), "password", 0,3, "annual")
+newUserTestNewOnboarding("qa", randEmailUser(), "Password1!", 0,3, "annual")
 
